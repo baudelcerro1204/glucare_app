@@ -21,7 +21,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            // Acción al presionar "Atrás"
+            Navigator.pop(context);
           },
         ),
         title: const Text('GLUCARE', style: TextStyle(color: Colors.blueAccent)),
@@ -122,7 +122,8 @@ class _CrearCuentaState extends State<CrearCuenta> {
                     padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(horizontal: 50, vertical: 15)),
                   ),
                   onPressed: () {
-                    // Acción al presionar "Registrarse"
+                    // Navegar a la pantalla principal
+                    Navigator.pushNamed(context, '/main');
                   },
                   child: const Text('Registrarse'),
                 ),

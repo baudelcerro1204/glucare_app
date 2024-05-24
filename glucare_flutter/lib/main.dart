@@ -19,7 +19,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: const CrearCuenta(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const CrearCuenta(),
+        '/main': (context) => const MainScreen(),
+      },
     );
   }
 }
@@ -35,3 +39,4 @@ class MainScreen extends StatelessWidget {
     );
   }
 }
+

@@ -6,11 +6,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      centerTitle: true,
-      title: Image.asset(
-        'lib/assets/logo.png',
-        height: 500,
-      ),
+      title: const Text('Main Screen'),
     );
   }
 
