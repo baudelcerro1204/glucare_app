@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glucare/screens/register.dart';
+import 'package:glucare/screens/home_screen.dart';
 import 'package:glucare/widgets/bottom_navigation_bar.dart';
 import 'package:glucare/widgets/custom_appbar.dart';
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: const CrearCuenta(),
+      home: const MainScreen(),
     );
   }
 }
