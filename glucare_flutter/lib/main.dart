@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glucare/screens/home_screen.dart';
 import 'package:glucare/widgets/bottom_navigation_bar.dart';
 import 'package:glucare/widgets/custom_appbar.dart';
 
@@ -29,8 +28,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(),
+    return const Scaffold(
+      appBar: CustomAppBar(),
       body: CustomBottomNavigationBar(),
     );
   }
