@@ -3,12 +3,12 @@ import 'package:glucare/screens/comunity_screen.dart';
 import 'package:glucare/screens/home_screen.dart';
 import 'package:glucare/screens/physical_activity_screen.dart';
 import 'package:glucare/screens/profile_screen.dart';
+import 'package:glucare/screens/nutrition_screen.dart'; // Importamos la pantalla de nutrición
 
 class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar({super.key});
+  const CustomBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _CustomBottomNavigationBarState createState() => _CustomBottomNavigationBarState();
 }
 
@@ -19,6 +19,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     HomeScreen(),
     CommunityScreen(),
     ActividadFisicaScreen(),
+    NutritionScreen(), // Añadimos la pantalla de nutrición
     ProfileScreen(),
   ];
 
@@ -47,15 +48,20 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             label: 'Actividad Física',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood), // Icono para la pantalla de nutrición
+            label: 'Nutrition', // Etiqueta para la pantalla de nutrición
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black, // Añadimos esta línea
+        unselectedItemColor: Colors.black, // Color de los ítems no seleccionados
         onTap: _onItemTapped,
       ),
     );
   }
 }
+
