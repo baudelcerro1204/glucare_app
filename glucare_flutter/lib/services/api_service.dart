@@ -20,25 +20,44 @@ class ApiService {
     }
   }
 
-  Future<http.Response> _getRequest(String url, Map<String, String> params, String apiKey, String apiSecret) async {
-    final method = 'GET';
-    final oauthNonce = _generateNonce(32);
-    final oauthTimestamp = (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString();
+  Future<void> login(String correoElectronico, String password) async {
+    final loginData = {
+      'correoElectronico': correoElectronico,
+      'password': password,
+    };
+      final response = await http.post(
+        Uri.parse('$baseUrl/user/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(loginData),
+      );
 
-    params.addAll({
-      'oauth_consumer_key': apiKey,
-      'oauth_nonce': oauthNonce,
-      'oauth_signature_method': 'HMAC-SHA1',
-      'oauth_timestamp': oauthTimestamp,
-      'oauth_version': '1.0',
-    });
-
-    final signature = _generateSignature(method, url, params, apiSecret);
-    params['oauth_signature'] = signature;
-
-    final uri = Uri.parse(url).replace(queryParameters: params);
-    return await http.get(uri);
+      if (response.statusCode != 200) {
+      throw Exception('Error al registrar usuario: ${response.body}');
+    }
   }
+
+  Future<http.Response> _getRequest(String url, Map<String, String> params, String apiKey, String apiSecret) async {
+  final method = 'GET';
+  final oauthNonce = _generateNonce(32);
+  final oauthTimestamp = (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString();
+
+  // Incluir el parámetro de método en la solicitud
+  params['method'] = 'food.get.v3';
+
+  params.addAll({
+    'oauth_consumer_key': apiKey,
+    'oauth_nonce': oauthNonce,
+    'oauth_signature_method': 'HMAC-SHA1',
+    'oauth_timestamp': oauthTimestamp,
+    'oauth_version': '1.0',
+  });
+
+  final signature = _generateSignature(method, url, params, apiSecret);
+  params['oauth_signature'] = signature;
+
+  final uri = Uri.parse(url).replace(queryParameters: params);
+  return await http.get(uri);
+}
 
   Future<http.Response> searchFood(String query, String apiKey, String apiSecret) async {
     final url = 'https://platform.fatsecret.com/rest/server.api';

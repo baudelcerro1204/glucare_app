@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:glucare/services/api_service.dart';
+import 'package:http/http.dart' as http;
+
 
 class CrearCuenta extends StatefulWidget {
   const CrearCuenta({super.key});
@@ -9,45 +13,59 @@ class CrearCuenta extends StatefulWidget {
 }
 
 class _CrearCuentaState extends State<CrearCuenta> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _surnameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _apellidoController = TextEditingController();
+  final TextEditingController _correoElectronicoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  String _selectedDiabetesType = 'Tipo 1';
+  final TextEditingController _edadController = TextEditingController();
+  String _selectedDiabetesType = '1';
 
-  final ApiService apiService = ApiService('http://localhost:8080', null, null);
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
   void _registerUser() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Las contraseñas no coinciden')),
-      );
-      return;
-    }
+  if (_passwordController.text != _confirmPasswordController.text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Las contraseñas no coinciden')),
+    );
+    return;
+  }
 
-    final userData = {
-      'name': _nameController.text,
-      'surname': _surnameController.text,
-      'email': _emailController.text,
-      'password': _passwordController.text,
-      'age': int.tryParse(_ageController.text) ?? 0,
-      'diabetesType': _selectedDiabetesType,
-    };
+  final userData = {
+    'nombre': _nombreController.text,
+    'apellido': _apellidoController.text,
+    'correoElectronico': _correoElectronicoController.text,
+    'contraseña': _passwordController.text,
+    'edad': int.tryParse(_edadController.text) ?? 0,
+    'diabetesTipo': _selectedDiabetesType,
+  };
 
-    try {
-      await apiService.registerUser(userData);
+  try {
+    final response = await http.post(
+      Uri.parse('http://192.168.0.5:8080/user/register'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(userData),
+    );
+
+    if (response.statusCode == 200) {
+      // Registro exitoso
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registro exitoso')),
       );
       Navigator.pushNamed(context, '/main');
-    } catch (e) {
+    } else {
+      // Manejar errores de registro
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text('Error: ${response.body}')),
       );
     }
+  } catch (e) {
+    // Manejar errores de red u otros errores
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error: $e')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +91,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextFormField(
-                  controller: _nameController,
+                  controller: _nombreController,
                   decoration: const InputDecoration(
                     labelText: 'Nombre',
                     border: OutlineInputBorder(),
@@ -83,7 +101,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _surnameController,
+                  controller: _apellidoController,
                   decoration: const InputDecoration(
                     labelText: 'Apellido',
                     border: OutlineInputBorder(),
@@ -93,7 +111,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _emailController,
+                  controller: _correoElectronicoController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
@@ -125,7 +143,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _ageController,
+                  controller: _edadController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Edad',
@@ -137,7 +155,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
                 const SizedBox(height: 16.0),
                 DropdownButtonFormField<String>(
                   value: _selectedDiabetesType,
-                  items: <String>['Tipo 1', 'Tipo 2', 'Gestacional']
+                  items: <String>['1', '2', '0']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,

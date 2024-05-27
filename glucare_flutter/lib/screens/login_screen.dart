@@ -1,35 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:glucare/screens/home_screen.dart';
+import 'package:glucare/main.dart';
+import 'package:glucare/screens/register_screen.dart';
+import 'package:glucare/services/api_service.dart';
 
 class IniciarSesion extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _correoElectronicoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
-  IniciarSesion({super.key});
+  IniciarSesion({Key? key});
 
-  void _login(BuildContext context) {
-    final String email = _emailController.text;
+  void _login(BuildContext context) async {
+    final String correoElectronico = _correoElectronicoController.text;
     final String password = _passwordController.text;
 
-    if (email.isEmpty || password.isEmpty) {
+    if (correoElectronico.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, complete todos los campos')),
       );
       return;
     }
 
-    if (email == 'test@example.com' && password == 'password') {
+    try {
+      await apiService.login(correoElectronico, password);
+      // Inicio de sesión exitoso
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Inicio de sesión exitoso')),
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const MainScreen()),
       );
-    } else {
+    } catch (e) {
+      // Error en el inicio de sesión
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email o contraseña incorrectos')),
       );
+      // Manejar el error como sea necesario
     }
   }
 
@@ -39,9 +46,10 @@ class IniciarSesion extends StatelessWidget {
     );
   }
 
-  void _register(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Funcionalidad de registro')),
+  void _goToRegister(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CrearCuenta()),
     );
   }
 
@@ -66,7 +74,7 @@ class IniciarSesion extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: _emailController,
+                controller: _correoElectronicoController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Email',
@@ -100,7 +108,7 @@ class IniciarSesion extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      _register(context);
+                      _goToRegister(context); // Ir a la pantalla de registro
                     },
                     child: const Text('Registrarse'),
                   ),

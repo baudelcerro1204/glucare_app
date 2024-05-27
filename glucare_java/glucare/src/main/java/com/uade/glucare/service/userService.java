@@ -48,4 +48,16 @@ public class userService {
         userRepository.deleteByCorreoElectronico(correoElectronico);
         return "User " + correoElectronico + " deleted";
     }
+
+    public boolean authenticateUser(String correoElectronico, String contraseña) {
+        // Buscar al usuario por correo electrónico en la base de datos
+        User user = userRepository.findByCorreoElectronico(correoElectronico);
+        
+        // Verificar si el usuario existe y si la contraseña coincide
+        if (user != null && user.getContraseña().equals(contraseña)) {
+            return true; // Credenciales válidas
+        } else {
+            return false; // Credenciales inválidas
+        }
+    }
 }
