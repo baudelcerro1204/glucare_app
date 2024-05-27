@@ -17,7 +17,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
   final TextEditingController _ageController = TextEditingController();
   String _selectedDiabetesType = 'Tipo 1';
 
-  final ApiService apiService = ApiService('http://localhost:8080');
+  final ApiService apiService = ApiService('http://localhost:8080', null, null);
 
   void _registerUser() async {
     if (_passwordController.text != _confirmPasswordController.text) {

@@ -31,11 +31,12 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
-  http: ^1.2.1
-  provider: ^6.1.2
-  image_picker: ^0.8.4+5
-  table_calendar: ^3.0.0
   flutter_form_builder: ^7.0.0
+  image_picker: ^0.8.4+5
+  provider: ^6.1.2
+  table_calendar: ^3.0.0
+  http: ^0.13.0
+  oauth1: 2.0.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0
