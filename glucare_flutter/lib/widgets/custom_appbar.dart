@@ -6,11 +6,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      centerTitle: true, // Asegúrate de que el título esté centrado
-      title: Image.asset(
-        'lib/assets/logo.png',
-        height: 700, // Ajusta el tamaño según sea necesario
+      centerTitle: true,
+      title: Center(
+        child: Image.asset(
+          'lib/assets/logo.png',
+          height: 2000, // Ajusta el tamaño según sea necesario
+        ),
       ),
+      backgroundColor: Color(0xFFE3F2FD),
+      iconTheme: IconThemeData(color: Colors.black),
     );
   }
 

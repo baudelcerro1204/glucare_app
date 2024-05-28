@@ -51,6 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil'),
+        backgroundColor: Color(0xFFE3F2FD),
         actions: [
           IconButton(
             icon: Icon(_isEditing ? Icons.check : Icons.edit),
@@ -58,30 +59,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            GestureDetector(
-              onTap: _isEditing ? _pickImage : null,
-              child: CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.grey[300],
-                backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
-                child: _profileImage == null
-                    ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey)
-                    : null,
+      body: Container(
+        color: Color(0xFFE3F2FD), // Fondo azul claro
+        width: double.infinity, // Asegura que el contenedor cubra todo el ancho
+        height: double.infinity, // Asegura que el contenedor cubra toda la altura
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: _isEditing ? _pickImage : null,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
+                  child: _profileImage == null
+                      ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey)
+                      : null,
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            _buildProfileField('Nombre', _nameController),
-            const SizedBox(height: 16.0),
-            _buildProfileField('Apellido', _surnameController),
-            const SizedBox(height: 16.0),
-            _buildProfileField('Email', _emailController),
-            const SizedBox(height: 16.0),
-            _buildProfileField('Edad', _ageController, isNumeric: true),
-          ],
+              const SizedBox(height: 16.0),
+              _buildProfileField('Nombre', _nameController),
+              const SizedBox(height: 16.0),
+              _buildProfileField('Apellido', _surnameController),
+              const SizedBox(height: 16.0),
+              _buildProfileField('Email', _emailController),
+              const SizedBox(height: 16.0),
+              _buildProfileField('Edad', _ageController, isNumeric: true),
+            ],
+          ),
         ),
       ),
     );
@@ -94,9 +100,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+        ),
         filled: true,
         fillColor: Colors.white,
+        contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
       ),
     );
   }

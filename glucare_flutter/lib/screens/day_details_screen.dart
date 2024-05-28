@@ -19,86 +19,138 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Detalles del día ${widget.date.day}'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Color(0xFFE3F2FD),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Episodios de hipoglucemia o hiperglucemia:'),
-                  Switch(
-                    value: _hadHypoHyper,
-                    onChanged: (value) {
-                      setState(() {
-                        _hadHypoHyper = value;
-                      });
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, color: Colors.black),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Text(
+                        '${widget.date.day}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 48), // Espacio para equilibrar el diseño
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Episodios de hipoglucemia o hiperglucemia:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _hadHypoHyper = true;
+                          });
+                        },
+                        child: Text('SI'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _hadHypoHyper ? Colors.blue : Colors.grey,
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(20),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _hadHypoHyper = false;
+                          });
+                        },
+                        child: Text('NO'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: !_hadHypoHyper ? Colors.blue : Colors.grey,
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(20),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  _buildDetailCard('Dosis de insulina aplicada', Icons.edit, (value) {
+                    setState(() {
+                      _insulinDose = value;
+                    });
+                  }),
+                  SizedBox(height: 20),
+                  _buildDetailCard('Actividad física realizada', Icons.fitness_center, (value) {
+                    setState(() {
+                      _physicalActivity = value;
+                    });
+                  }),
+                  SizedBox(height: 20),
+                  _buildDetailCard('Alimentos ingeridos', Icons.restaurant, (value) {
+                    setState(() {
+                      _foodIntake = value;
+                    });
+                  }),
+                  SizedBox(height: 20),
+                  _buildDetailCard('Notas', Icons.note, (value) {
+                    setState(() {
+                      _notes = value;
+                    });
+                  }),
+                  SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Aquí puedes guardar la información en una base de datos o algún otro almacenamiento
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Guardar'),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16.0),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Dosis de insulina aplicada',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _insulinDose = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Actividad física realizada',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _physicalActivity = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Alimentos ingeridos',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _foodIntake = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Notas',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _notes = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Aquí puedes guardar la información en una base de datos o algún otro almacenamiento
-                  Navigator.pop(context);
-                },
-                child: const Text('Guardar'),
-              ),
-            ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailCard(String label, IconData icon, Function(String) onChanged) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.blue),
+            SizedBox(width: 10),
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: label,
+                  border: InputBorder.none,
+                ),
+                onChanged: onChanged,
+              ),
+            ),
+          ],
         ),
       ),
     );
