@@ -4,12 +4,13 @@ import 'package:glucare/screens/register_screen.dart';
 import 'package:glucare/services/api_service.dart';
 
 class IniciarSesion extends StatelessWidget {
-  final TextEditingController _correoElectronicoController =
-      TextEditingController();
+  final TextEditingController _correoElectronicoController;
   final TextEditingController _passwordController = TextEditingController();
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
-  IniciarSesion({Key? key});
+  IniciarSesion({Key? key, required String correoElectronico}) 
+      : _correoElectronicoController = TextEditingController(text: correoElectronico),
+        super(key: key);
 
   void _login(BuildContext context) async {
     final String correoElectronico = _correoElectronicoController.text;
@@ -33,11 +34,11 @@ class IniciarSesion extends StatelessWidget {
         MaterialPageRoute(builder: (context) => const MainScreen()),
       );
     } catch (e) {
+      print(e);
       // Error en el inicio de sesión
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email o contraseña incorrectos')),
       );
-      // Manejar el error como sea necesario
     }
   }
 
