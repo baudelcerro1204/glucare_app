@@ -15,7 +15,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +32,16 @@ class MyApp extends StatelessWidget {
         '/create_post': (context) => const CreatePostScreen(),
         '/community': (context) => const CommunityScreen(),
         '/calendar': (context) => const CalendarScreen(),
-        '/day_details': (context) => DayDetailsScreen(date: DateTime.now()), // Placeholder
-        '/nutrition': (context) => const NutritionScreen(), // Agrega la nueva ruta para la pantalla de nutrición
-        '/login': (context) => IniciarSesion(), // Agrega la ruta para la pantalla de registro
-        '/reminders': (context) => const ReminderListScreen(), // Agrega la ruta para la lista de recordatorios
-        '/new_reminder': (context) => NewReminderScreen(), // Agrega la ruta para la pantalla de nuevo recordatorio
+        '/day_details': (context) =>
+            DayDetailsScreen(date: DateTime.now()), // Placeholder
+        '/nutrition': (context) =>
+            const NutritionScreen(), // Agrega la nueva ruta para la pantalla de nutrición
+        '/login': (context) =>
+            IniciarSesion(), // Agrega la ruta para la pantalla de registro
+        '/reminders': (context) =>
+            const ReminderListScreen(), // Agrega la ruta para la lista de recordatorios
+        '/new_reminder': (context) =>
+            NewReminderScreen(), // Agrega la ruta para la pantalla de nuevo recordatorio
       },
     );
   }

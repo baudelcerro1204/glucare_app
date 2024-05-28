@@ -1,8 +1,8 @@
 package com.uade.glucare.service;
 
 import java.util.ArrayList;
-import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.uade.glucare.repository.userRepository;
 import com.uade.glucare.model.User;
@@ -13,6 +13,9 @@ public class userService {
 
     @Autowired
     private userRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     public User getUserByCorreoElectronico(String correoElectronico) {
         return userRepository.findByCorreoElectronico(correoElectronico);
@@ -27,7 +30,16 @@ public class userService {
     }
 
     public User saveUser(User user) {
+        user.setContraseña(passwordEncoder.encode(user.getContraseña()));
         return userRepository.save(user);
+    }
+
+    public boolean authenticateUser(String correoElectronico, String password) {
+        User user = userRepository.findByCorreoElectronico(correoElectronico);
+        if (user != null) {
+            return passwordEncoder.matches(password, user.getContraseña());
+        }
+        return false;
     }
 
     public User updateUser(User user) {
@@ -47,17 +59,5 @@ public class userService {
     public String deleteUserByCorreoElectronico(String correoElectronico) {
         userRepository.deleteByCorreoElectronico(correoElectronico);
         return "User " + correoElectronico + " deleted";
-    }
-
-    public boolean authenticateUser(String correoElectronico, String contraseña) {
-        // Buscar al usuario por correo electrónico en la base de datos
-        User user = userRepository.findByCorreoElectronico(correoElectronico);
-        
-        // Verificar si el usuario existe y si la contraseña coincide
-        if (user != null && user.getContraseña().equals(contraseña)) {
-            return true; // Credenciales válidas
-        } else {
-            return false; // Credenciales inválidas
-        }
     }
 }

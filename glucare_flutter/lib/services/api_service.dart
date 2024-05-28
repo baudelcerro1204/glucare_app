@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:http/http.dart' as http;
-import 'package:crypto/crypto.dart';
 
 class ApiService {
   final String baseUrl;
@@ -9,7 +7,7 @@ class ApiService {
   final String appKey = '1399075e20f27558d811e1b85c38b972';
 
   final String apiKey = '8770f277a20542d3a5e9478e10ae44e2';
-final String region = 'brazilsouth';
+  final String region = 'brazilsouth';
 
   ApiService(this.baseUrl);
 
@@ -43,27 +41,29 @@ final String region = 'brazilsouth';
 
   Future<Map<String, dynamic>> getFoodInfo(String query) async {
     final response = await http.get(
-      Uri.parse('https://api.edamam.com/api/food-database/v2/parser?ingr=$query&app_id=$appId&app_key=$appKey'),
+      Uri.parse(
+          'https://api.edamam.com/api/food-database/v2/parser?ingr=$query&app_id=$appId&app_key=$appKey'),
     );
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Error al obtener información nutricional: ${response.body}');
+      throw Exception(
+          'Error al obtener información nutricional: ${response.body}');
     }
   }
 
   Future<Map<String, dynamic>> searchFood(String query) async {
     final response = await http.get(
-      Uri.parse('https://api.edamam.com/api/food-database/v2/parser?ingr=$query&app_id=$appId&app_key=$appKey'),
+      Uri.parse(
+          'https://api.edamam.com/api/food-database/v2/parser?ingr=$query&app_id=$appId&app_key=$appKey'),
     );
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Error al obtener información nutricional: ${response.body}');
+      throw Exception(
+          'Error al obtener información nutricional: ${response.body}');
     }
-
-
   }
 }

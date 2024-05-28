@@ -1,6 +1,8 @@
 package com.uade.glucare.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,47 +19,93 @@ public class Reminder {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private String id;
 
-    @Column(name = "fecha_hora_recordatorio")
-    private LocalDateTime fechaHoraRecordatorio;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "tipo")
-    private String tipo;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "descripcion")
-    private String descripcion;
+    @Column(name = "date")
+    private LocalDate date;
+
+    @Column(name = "time")
+    private LocalTime time;
+
+    @Column(name = "repeat_days")
+    private List<Boolean> repeatDays;
+
+    @Column(name = "etiqueta")
+    private String etiqueta;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Long getId() {
+    // Getters
+    public String getId() {
         return id;
     }
 
-    public LocalDateTime getFechaHoraRecordatorio() {
-        return fechaHoraRecordatorio;
+    public String getTitle() {
+        return title;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getDescription() {
+        return description;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setFechaHoraRecordatorio(LocalDateTime fechaHoraRecordatorio) {
-        this.fechaHoraRecordatorio = fechaHoraRecordatorio;
+    public LocalTime getTime() {
+        return time;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public List<Boolean> getRepeatDays() {
+        return repeatDays;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public String getEtiqueta() {
+        return etiqueta;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    // Setters
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
+    public void setRepeatDays(List<Boolean> repeatDays) {
+        this.repeatDays = repeatDays;
+    }
+
+    public void setEtiqueta(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

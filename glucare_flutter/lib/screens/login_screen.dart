@@ -4,7 +4,8 @@ import 'package:glucare/screens/register_screen.dart';
 import 'package:glucare/services/api_service.dart';
 
 class IniciarSesion extends StatelessWidget {
-  final TextEditingController _correoElectronicoController = TextEditingController();
+  final TextEditingController _correoElectronicoController =
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
