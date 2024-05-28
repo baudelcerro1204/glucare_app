@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
         '/': (context) => const MainScreen(),
         '/create_post': (context) => const CreatePostScreen(),
@@ -36,8 +36,7 @@ class MyApp extends StatelessWidget {
             DayDetailsScreen(date: DateTime.now()), // Placeholder
         '/nutrition': (context) =>
             const NutritionScreen(), // Agrega la nueva ruta para la pantalla de nutrición
-        '/login': (context) =>
-            IniciarSesion(), // Agrega la ruta para la pantalla de registro
+        '/login': (context) => IniciarSesion(correoElectronico: ''), // Agrega la ruta para la pantalla de registro
         '/reminders': (context) =>
             const ReminderListScreen(), // Agrega la ruta para la lista de recordatorios
         '/new_reminder': (context) =>

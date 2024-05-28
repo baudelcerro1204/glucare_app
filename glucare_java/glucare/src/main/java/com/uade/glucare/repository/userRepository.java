@@ -11,6 +11,7 @@ import com.uade.glucare.model.User;
 public interface userRepository extends JpaRepository<User, Long>{
     
     User findByCorreoElectronico(String correoElectronico);
+    
     @SuppressWarnings("null")
     ArrayList<User> findAll();
     User findByNombre(String nombre);

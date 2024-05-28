@@ -24,30 +24,31 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        try {
+            User savedUser = userService.saveUser(user);
+            return ResponseEntity.ok(savedUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al registrar usuario: " + e.getMessage());
+        }
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
         try {
+            System.out.println("Correo recibido: " + loginRequest.getCorreoElectronico());
+            System.out.println("Contraseña recibida: " + loginRequest.getPassword());
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getCorreoElectronico(), loginRequest.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return ResponseEntity.ok("Inicio de sesión exitoso para el usuario: " + loginRequest.getCorreoElectronico());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales de inicio de sesión incorrectas");
+            e.printStackTrace();
+            System.out.println("Email o contraseña incorrectos para el usuario: " + loginRequest.getCorreoElectronico());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email o contraseña incorrectos");
         }
-    }
-
-    @DeleteMapping("/delete/{correoElectronico}")
-    public String deleteUserByCorreoElectronico(@PathVariable String correoElectronico) {
-        return userService.deleteUserByCorreoElectronico(correoElectronico);
-    }
-
-    @PutMapping("/update")
-    public User updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
     }
 }

@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:glucare/screens/login_screen.dart';
 import 'package:glucare/services/api_service.dart';
-import 'package:http/http.dart' as http;
-
 
 class CrearCuenta extends StatefulWidget {
   const CrearCuenta({super.key});
@@ -24,48 +21,39 @@ class _CrearCuentaState extends State<CrearCuenta> {
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
   void _registerUser() async {
-  if (_passwordController.text != _confirmPasswordController.text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Las contraseñas no coinciden')),
-    );
-    return;
-  }
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Las contraseñas no coinciden')),
+      );
+      return;
+    }
 
-  final userData = {
-    'nombre': _nombreController.text,
-    'apellido': _apellidoController.text,
-    'correoElectronico': _correoElectronicoController.text,
-    'contraseña': _passwordController.text,
-    'edad': int.tryParse(_edadController.text) ?? 0,
-    'diabetesTipo': _selectedDiabetesType,
-  };
+    final userData = {
+      'nombre': _nombreController.text,
+      'apellido': _apellidoController.text,
+      'correoElectronico': _correoElectronicoController.text,
+      'contraseña': _passwordController.text,
+      'edad': int.tryParse(_edadController.text) ?? 0,
+      'diabetesTipo': _selectedDiabetesType,
+    };
 
-  try {
-    final response = await http.post(
-      Uri.parse('http://192.168.0.5:8080/user/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(userData),
-    );
-
-    if (response.statusCode == 200) {
-      // Registro exitoso
+    try {
+      final response = await apiService.registerUser(userData);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registro exitoso')),
       );
-      Navigator.pushNamed(context, '/main');
-    } else {
-      // Manejar errores de registro
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => IniciarSesion(correoElectronico: _correoElectronicoController.text),
+        ),
+      );
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${response.body}')),
+        SnackBar(content: Text('Error: $e')),
       );
     }
-  } catch (e) {
-    // Manejar errores de red u otros errores
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error: $e')),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
