@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:glucare/services/api_service.dart';
 
@@ -10,56 +9,11 @@ class NutritionScreen extends StatefulWidget {
 }
 
 class _NutritionScreenState extends State<NutritionScreen> {
-  final ApiService apiService = ApiService('https://platform.fatsecret.com/rest/server.api');
-  final String apiKey = 'bb17c699dff04e9ea9f641fdba3b5697'; // API Key de FatSecret
-  final String apiSecret = '9fe62b5da1da4849ae4dbf9289d89b73'; // API Secret de FatSecret
-
+  final ApiService apiService = ApiService('https://api.edamam.com');
   String _searchTerm = '';
-  String _selectedFilter = 'All'; // Inicialmente, muestra todos los alimentos
-  List<String> _foods = []; // Lista de alimentos obtenidos de la API
-  bool _isLoading = false; // Estado de carga
-  String _errorMessage = ''; // Mensaje de error
-
-  @override
-  void initState() {
-    super.initState();
-    _loadDefaultFoods();
-  }
-
-  void _loadDefaultFoods() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = '';
-    });
-
-    try {
-      final response = await apiService.searchFood('default', apiKey, apiSecret); // 'default' es una búsqueda general para obtener alimentos por defecto
-      print('Response Body: ${response.body}'); // Imprime el cuerpo de la respuesta en la consola
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          if (data['foods'] != null && data['foods']['food'] != null) {
-            _foods = (data['foods']['food'] as List)
-                .map((food) => food['food_name'] as String)
-                .toList();
-          } else {
-            _foods = [];
-          }
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'Error: ${response.body}';
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error: ${e.toString()}';
-        _isLoading = false;
-      });
-    }
-  }
+  List<Map<String, dynamic>> _foods = [];
+  bool _isLoading = false;
+  String _errorMessage = '';
 
   void _searchFood(String query) async {
     setState(() {
@@ -68,26 +22,15 @@ class _NutritionScreenState extends State<NutritionScreen> {
     });
 
     try {
-      final response = await apiService.searchFood(query, apiKey, apiSecret);
-      print('Response Body: ${response.body}'); // Imprime el cuerpo de la respuesta en la consola
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          if (data['foods'] != null && data['foods']['food'] != null) {
-            _foods = (data['foods']['food'] as List)
-                .map((food) => food['food_name'] as String)
-                .toList();
-          } else {
-            _foods = [];
-          }
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'Error: ${response.body}';
-          _isLoading = false;
-        });
-      }
+      final foodData = await apiService.searchFood(query);
+      final List<Map<String, dynamic>> foods = (foodData['hints'] as List)
+          .map((item) => item['food'] as Map<String, dynamic>)
+          .toList();
+
+      setState(() {
+        _foods = foods;
+        _isLoading = false;
+      });
     } catch (e) {
       setState(() {
         _errorMessage = 'Error: ${e.toString()}';
@@ -108,42 +51,15 @@ class _NutritionScreenState extends State<NutritionScreen> {
             if (_searchTerm.isNotEmpty) {
               _searchFood(_searchTerm);
             } else {
-              _loadDefaultFoods(); // Carga alimentos por defecto si el campo de búsqueda está vacío
+              setState(() {
+                _foods = [];
+              });
             }
           },
           decoration: const InputDecoration(
-            hintText: 'Search food...',
+            hintText: 'Buscar alimento...',
           ),
         ),
-        actions: [
-          PopupMenuButton<String>(
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'All',
-                child: Text('All'),
-              ),
-              const PopupMenuItem(
-                value: 'Carbohydrates',
-                child: Text('Carbohydrates'),
-              ),
-              const PopupMenuItem(
-                value: 'Proteins',
-                child: Text('Proteins'),
-              ),
-              const PopupMenuItem(
-                value: 'Fats',
-                child: Text('Fats'),
-              ),
-            ],
-            onSelected: (value) {
-              setState(() {
-                _selectedFilter = value;
-                // Aquí deberías filtrar los alimentos basados en el valor seleccionado
-                // Esto depende de cómo quieras manejar el filtrado de los resultados
-              });
-            },
-          ),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -154,11 +70,32 @@ class _NutritionScreenState extends State<NutritionScreen> {
                   : ListView.builder(
                       itemCount: _foods.length,
                       itemBuilder: (context, index) {
+                        final food = _foods[index];
                         return ListTile(
-                          title: Text(_foods[index]),
-                          // Agrega aquí la lógica para mostrar la descripción y la información nutricional al hacer clic en un alimento
+                          title: Text(food['label']),
+                          subtitle: Text(
+                            'Calorías: ${food['nutrients']['ENERC_KCAL']?.toString() ?? 'N/A'} kcal',
+                          ),
                           onTap: () {
-                            // Lógica para mostrar la descripción y la información nutricional
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(food['label']),
+                                content: Text(
+                                  'Información Nutricional:\n\n'
+                                  'Calorías: ${food['nutrients']['ENERC_KCAL']?.toString() ?? 'N/A'} kcal\n'
+                                  'Proteínas: ${food['nutrients']['PROCNT']?.toString() ?? 'N/A'} g\n'
+                                  'Grasas: ${food['nutrients']['FAT']?.toString() ?? 'N/A'} g\n'
+                                  'Carbohidratos: ${food['nutrients']['CHOCDF']?.toString() ?? 'N/A'} g',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Cerrar'),
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                         );
                       },

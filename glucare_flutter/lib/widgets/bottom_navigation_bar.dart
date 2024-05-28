@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:glucare/screens/calendar_screen.dart';
 import 'package:glucare/screens/comunity_screen.dart';
 import 'package:glucare/screens/home_screen.dart';
 import 'package:glucare/screens/physical_activity_screen.dart';
 import 'package:glucare/screens/profile_screen.dart';
-import 'package:glucare/screens/nutrition_screen.dart'; // Importamos la pantalla de nutrición
+import 'package:glucare/screens/nutrition_screen.dart';
+import 'package:glucare/screens/reminder_list_screen.dart'; // Importamos la pantalla de lista de recordatorios
 
 class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar({Key? key}) : super(key: key);
@@ -19,8 +21,10 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     HomeScreen(),
     CommunityScreen(),
     ActividadFisicaScreen(),
-    NutritionScreen(), // Añadimos la pantalla de nutrición
-    ProfileScreen(),
+    CalendarScreen(),
+    NutritionScreen(),
+    ReminderListScreen(), // Añadimos la pantalla de lista de recordatorios
+    ProfileScreen(), // Movemos la pantalla de perfil al final
   ];
 
   void _onItemTapped(int index) {
@@ -48,8 +52,16 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             label: 'Actividad Física',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fastfood), // Icono para la pantalla de nutrición
-            label: 'Nutrition', // Etiqueta para la pantalla de nutrición
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood),
+            label: 'Nutrition',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.alarm),
+            label: 'Reminders',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -58,10 +70,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black, // Color de los ítems no seleccionados
+        unselectedItemColor: Colors.black,
         onTap: _onItemTapped,
       ),
     );
   }
 }
-

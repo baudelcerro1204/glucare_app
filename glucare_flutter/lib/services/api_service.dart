@@ -5,6 +5,11 @@ import 'package:crypto/crypto.dart';
 
 class ApiService {
   final String baseUrl;
+  final String appId = 'be89c2af';
+  final String appKey = '1399075e20f27558d811e1b85c38b972';
+
+  final String apiKey = '8770f277a20542d3a5e9478e10ae44e2';
+final String region = 'brazilsouth';
 
   ApiService(this.baseUrl);
 
@@ -25,63 +30,40 @@ class ApiService {
       'correoElectronico': correoElectronico,
       'password': password,
     };
-      final response = await http.post(
-        Uri.parse('$baseUrl/user/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(loginData),
-      );
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(loginData),
+    );
 
-      if (response.statusCode != 200) {
+    if (response.statusCode != 200) {
       throw Exception('Error al registrar usuario: ${response.body}');
     }
   }
 
-  Future<http.Response> _getRequest(String url, Map<String, String> params, String apiKey, String apiSecret) async {
-  final method = 'GET';
-  final oauthNonce = _generateNonce(32);
-  final oauthTimestamp = (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString();
+  Future<Map<String, dynamic>> getFoodInfo(String query) async {
+    final response = await http.get(
+      Uri.parse('https://api.edamam.com/api/food-database/v2/parser?ingr=$query&app_id=$appId&app_key=$appKey'),
+    );
 
-  // Incluir el parámetro de método en la solicitud
-  params['method'] = 'food.get.v3';
-
-  params.addAll({
-    'oauth_consumer_key': apiKey,
-    'oauth_nonce': oauthNonce,
-    'oauth_signature_method': 'HMAC-SHA1',
-    'oauth_timestamp': oauthTimestamp,
-    'oauth_version': '1.0',
-  });
-
-  final signature = _generateSignature(method, url, params, apiSecret);
-  params['oauth_signature'] = signature;
-
-  final uri = Uri.parse(url).replace(queryParameters: params);
-  return await http.get(uri);
-}
-
-  Future<http.Response> searchFood(String query, String apiKey, String apiSecret) async {
-    final url = 'https://platform.fatsecret.com/rest/server.api';
-    final params = {
-      'method': 'foods.search',
-      'format': 'json',
-      'search_expression': query,
-    };
-    return await _getRequest(url, params, apiKey, apiSecret);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error al obtener información nutricional: ${response.body}');
+    }
   }
 
-  String _generateNonce(int length) {
-    final _random = Random();
-    const _chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    return List.generate(length, (index) => _chars[_random.nextInt(_chars.length)]).join();
-  }
+  Future<Map<String, dynamic>> searchFood(String query) async {
+    final response = await http.get(
+      Uri.parse('https://api.edamam.com/api/food-database/v2/parser?ingr=$query&app_id=$appId&app_key=$appKey'),
+    );
 
-  String _generateSignature(String method, String url, Map<String, String> params, String secret) {
-    final sortedParams = params.keys.toList()..sort();
-    final paramString = sortedParams.map((key) => '$key=${Uri.encodeQueryComponent(params[key]!)}').join('&');
-    final baseString = '$method&${Uri.encodeComponent(url)}&${Uri.encodeComponent(paramString)}';
-    final signingKey = '$secret&';
-    final hmacSha1 = Hmac(sha1, utf8.encode(signingKey));
-    final signature = hmacSha1.convert(utf8.encode(baseString));
-    return base64.encode(signature.bytes);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error al obtener información nutricional: ${response.body}');
+    }
+
+
   }
 }
