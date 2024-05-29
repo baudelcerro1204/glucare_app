@@ -67,7 +67,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                         },
                         child: Text('SI'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: _hadHypoHyper ? Colors.blue : Colors.grey,
+                          backgroundColor: _hadHypoHyper ? Colors.blue : Colors.white,
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(20),
                         ),
@@ -81,7 +81,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                         },
                         child: Text('NO'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: !_hadHypoHyper ? Colors.blue : Colors.grey,
+                          backgroundColor: !_hadHypoHyper ? Colors.blue : Colors.white,
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(20),
                         ),

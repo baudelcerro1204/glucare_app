@@ -6,7 +6,8 @@ class Reminder {
   DateTime date;
   TimeOfDay time;
   List<bool> repeatDays;
-  String? etiqueta; // Nueva propiedad para la etiqueta
+  String etiqueta;
+  Color color;
 
   Reminder({
     required this.title,
@@ -14,6 +15,7 @@ class Reminder {
     required this.date,
     required this.time,
     required this.repeatDays,
-    this.etiqueta, String? tag, // Parámetro opcional para la etiqueta
+    required this.etiqueta,
+    required this.color,
   });
 }

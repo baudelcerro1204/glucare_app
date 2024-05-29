@@ -4,10 +4,18 @@ class ActividadFisicaScreen extends StatefulWidget {
   const ActividadFisicaScreen({super.key});
 
   @override
-  _ActividadFisicaScreenState createState() => _ActividadFisicaScreenState();
+  ActividadFisicaScreenState createState() => ActividadFisicaScreenState();
 }
 
-class _ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
+
+void main() {
+  runApp(const MaterialApp(
+    home: ActividadFisicaScreen(),
+  ));
+}
+
+
+class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
   String _selectedIntensity = 'Baja';
 
   @override
@@ -15,10 +23,10 @@ class _ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Actividad Física'),
-        backgroundColor: Color(0xFFE3F2FD), // Color de fondo de la AppBar
+        backgroundColor: const Color(0xFFE3F2FD), // Color de fondo de la AppBar
       ),
       body: Container(
-        color: Color(0xFFE3F2FD), // Fondo azul claro
+        color: const Color(0xFFE3F2FD), // Fondo azul claro
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -36,7 +44,7 @@ class _ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
                         offset: Offset(0, 2),
@@ -74,20 +82,20 @@ class _ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
               ),
               const SizedBox(height: 10),
               if (_selectedIntensity == 'Baja') ...[
-                ActivitySuggestionCard(activity: 'Yoga'),
-                ActivitySuggestionCard(activity: 'Pilates'),
-                ActivitySuggestionCard(activity: 'Ciclismo'),
-                ActivitySuggestionCard(activity: 'Baile'),
+                ActivitySuggestionCard(activity: 'Yoga', duration: '30 minutos', info: 'Ideal para estiramientos y relajación.'),
+                ActivitySuggestionCard(activity: 'Pilates', duration: '40 minutos', info: 'Excelente para fortalecer el core.'),
+                ActivitySuggestionCard(activity: 'Ciclismo', duration: '60 minutos', info: 'Perfecto para mejorar la resistencia.'),
+                ActivitySuggestionCard(activity: 'Baile', duration: '45 minutos', info: 'Divertido y bueno para el cardio.'),
               ] else if (_selectedIntensity == 'Media') ...[
-                ActivitySuggestionCard(activity: 'Football'),
-                ActivitySuggestionCard(activity: 'Handball'),
-                ActivitySuggestionCard(activity: 'Basquetball'),
-                ActivitySuggestionCard(activity: 'Tenis'),
+                ActivitySuggestionCard(activity: 'Football', duration: '90 minutos', info: 'Gran ejercicio cardiovascular y de equipo.'),
+                ActivitySuggestionCard(activity: 'Handball', duration: '60 minutos', info: 'Bueno para la agilidad y resistencia.'),
+                ActivitySuggestionCard(activity: 'Basquetball', duration: '60 minutos', info: 'Excelente para el cardio y la coordinación.'),
+                ActivitySuggestionCard(activity: 'Tenis', duration: '60 minutos', info: 'Ideal para la velocidad y agilidad.'),
               ] else if (_selectedIntensity == 'Alta') ...[
-                ActivitySuggestionCard(activity: 'Natación'),
-                ActivitySuggestionCard(activity: 'Boxeo'),
-                ActivitySuggestionCard(activity: 'Cardio'),
-                ActivitySuggestionCard(activity: 'Atletismo'),
+                ActivitySuggestionCard(activity: 'Natación', duration: '60 minutos', info: 'Perfecto para todo el cuerpo.'),
+                ActivitySuggestionCard(activity: 'Boxeo', duration: '45 minutos', info: 'Excelente para el cardio y la fuerza.'),
+                ActivitySuggestionCard(activity: 'Cardio', duration: '30 minutos', info: 'Ideal para quemar calorías rápidamente.'),
+                ActivitySuggestionCard(activity: 'Atletismo', duration: '60 minutos', info: 'Perfecto para mejorar la velocidad y resistencia.'),
               ],
             ],
           ),
@@ -99,30 +107,59 @@ class _ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
 
 class ActivitySuggestionCard extends StatelessWidget {
   final String activity;
+  final String duration;
+  final String info;
 
-  const ActivitySuggestionCard({required this.activity});
+  const ActivitySuggestionCard({
+    required this.activity,
+    required this.duration,
+    required this.info,
+  });
+
+  void _showActivityDetails(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(activity),
+          content: Text('Duración: $duration\n\n$info'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      width: double.infinity,
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            offset: Offset(0, 2),
-            blurRadius: 6.0,
+    return GestureDetector(
+      onTap: () => _showActivityDetails(context),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              offset: Offset(0, 2),
+              blurRadius: 6.0,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            activity,
+            style: const TextStyle(fontSize: 16),
           ),
-        ],
-      ),
-      child: Center(
-        child: Text(
-          activity,
-          style: const TextStyle(fontSize: 16),
         ),
       ),
     );

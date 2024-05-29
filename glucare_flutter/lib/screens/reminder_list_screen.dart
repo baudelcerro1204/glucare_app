@@ -32,6 +32,7 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
               Text('Descripción: ${reminder.description}'),
               Text('Fecha: ${reminder.date.toString()}'),
               Text('Hora: ${reminder.time.format(context)}'),
+              Text('Etiqueta: ${reminder.etiqueta}'),
             ],
           ),
           actions: [
@@ -94,8 +95,13 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
         itemBuilder: (context, index) {
           final reminder = _reminders[index];
           return ListTile(
+            leading: CircleAvatar(
+              backgroundColor: reminder.color,
+            ),
             title: Text(reminder.title),
-            subtitle: Text('${reminder.description}\n${reminder.date} ${reminder.time.format(context)}'),
+            subtitle: Text(
+              '${reminder.description}\n${reminder.date} ${reminder.time.format(context)}\nEtiqueta: ${reminder.etiqueta}',
+            ),
             onTap: () {
               _viewReminderDetails(context, reminder);
             },

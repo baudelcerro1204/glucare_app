@@ -15,8 +15,17 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
   TimeOfDay? _selectedTime;
   List<bool> _repeatDays = List.filled(7, false);
   String _selectedTag = 'Mediciones de Azucar';
-  bool _showOtherTagField = false;
+  Color _selectedColor = Colors.blue;
   late TextEditingController _otherTagController;
+
+  final List<Map<String, dynamic>> _tags = [
+    {'label': 'Mediciones de Azucar', 'color': Colors.blue},
+    {'label': 'Dosis de Insulina', 'color': Colors.green},
+    {'label': 'Comidas', 'color': Colors.red},
+    {'label': 'Medicamentos', 'color': Colors.orange},
+    {'label': 'Citas con medicos', 'color': Colors.purple},
+    {'label': 'Otro', 'color': Colors.grey},
+  ];
 
   @override
   void initState() {
@@ -85,27 +94,28 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
               Text('Etiqueta del recordatorio'),
               DropdownButtonFormField<String>(
                 value: _selectedTag,
-                items: [
-                  'Mediciones de Azucar',
-                  'Dosis de Insulina',
-                  'Comidas',
-                  'Medicamentos',
-                  'Citas con medicos',
-                  'Otro',
-                ].map((tag) {
+                items: _tags.map((tag) {
                   return DropdownMenuItem<String>(
-                    value: tag,
-                    child: Text(tag),
+                    value: tag['label'],
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: tag['color'],
+                        ),
+                        SizedBox(width: 8),
+                        Text(tag['label']),
+                      ],
+                    ),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
                     _selectedTag = value!;
-                    _showOtherTagField = value == 'Otro';
+                    _selectedColor = _tags.firstWhere((tag) => tag['label'] == value)['color'];
                   });
                 },
               ),
-              if (_showOtherTagField) ...[
+              if (_selectedTag == 'Otro') ...[
                 SizedBox(height: 16.0),
                 TextField(
                   controller: _otherTagController,
@@ -115,16 +125,16 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
               SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: () {
-                  // Aquí puedes guardar el recordatorio con la información recopilada
                   final newReminder = Reminder(
                     title: _titleController.text,
                     description: _descriptionController.text,
                     date: _selectedDate ?? DateTime.now(),
                     time: _selectedTime ?? TimeOfDay.now(),
                     repeatDays: _repeatDays,
-                    etiqueta: _selectedTag.isNotEmpty ? _selectedTag : null,
+                    etiqueta: _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
+                    color: _selectedTag == 'Otro' ? Colors.grey : _selectedColor,
                   );
-                  Navigator.pop(context, newReminder); // Regresa el nuevo recordatorio a la pantalla anterior
+                  Navigator.pop(context, newReminder);
                 },
                 child: Text('Guardar Recordatorio'),
               ),

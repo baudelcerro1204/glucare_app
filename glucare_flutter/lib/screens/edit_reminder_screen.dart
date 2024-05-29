@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:glucare/screens/reminder_screen.dart';
 import 'package:intl/intl.dart';
 
-
 class EditReminderScreen extends StatefulWidget {
   final Reminder reminder;
 
@@ -19,6 +18,16 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   TimeOfDay? _selectedTime;
   List<bool> _repeatDays = [];
   String _selectedTag = '';
+  Color _selectedColor = Colors.blue;
+
+  final List<Map<String, dynamic>> _tags = [
+    {'label': 'Mediciones de Azucar', 'color': Colors.blue},
+    {'label': 'Dosis de Insulina', 'color': Colors.green},
+    {'label': 'Comidas', 'color': Colors.red},
+    {'label': 'Medicamentos', 'color': Colors.orange},
+    {'label': 'Citas con medicos', 'color': Colors.purple},
+    {'label': 'Otro', 'color': Colors.grey},
+  ];
 
   @override
   void initState() {
@@ -28,7 +37,8 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
     _selectedDate = widget.reminder.date;
     _selectedTime = widget.reminder.time;
     _repeatDays = List.from(widget.reminder.repeatDays);
-    _selectedTag = widget.reminder.etiqueta ?? ''; // Si la etiqueta es nula, establece una cadena vacía
+    _selectedTag = widget.reminder.etiqueta;
+    _selectedColor = _tags.firstWhere((tag) => tag['label'] == _selectedTag)['color'];
   }
 
   @override
@@ -84,36 +94,38 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
             Text('Etiqueta del recordatorio'),
             DropdownButtonFormField<String>(
               value: _selectedTag,
-              items: [
-                'Mediciones de Azucar',
-                'Dosis de Insulina',
-                'Comidas',
-                'Medicamentos',
-                'Citas con medicos',
-                'Otro',
-              ].map((tag) {
+              items: _tags.map((tag) {
                 return DropdownMenuItem<String>(
-                  value: tag,
-                  child: Text(tag),
+                  value: tag['label'],
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: tag['color'],
+                      ),
+                      SizedBox(width: 8),
+                      Text(tag['label']),
+                    ],
+                  ),
                 );
               }).toList(),
               onChanged: (value) {
                 setState(() {
                   _selectedTag = value!;
+                  _selectedColor = _tags.firstWhere((tag) => tag['label'] == value)['color'];
                 });
               },
             ),
             SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
-                // Aquí puedes guardar los cambios del recordatorio editado
                 final editedReminder = Reminder(
                   title: _titleController.text,
                   description: _descriptionController.text,
                   date: _selectedDate ?? DateTime.now(),
                   time: _selectedTime ?? TimeOfDay.now(),
                   repeatDays: _repeatDays,
-                  etiqueta: _selectedTag.isNotEmpty ? _selectedTag : null,
+                  etiqueta: _selectedTag,
+                  color: _selectedColor,
                 );
                 Navigator.pop(context, editedReminder);
               },
