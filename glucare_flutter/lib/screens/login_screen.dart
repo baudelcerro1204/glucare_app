@@ -8,7 +8,7 @@ class IniciarSesion extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
-  IniciarSesion({Key? key, required String correoElectronico}) 
+  IniciarSesion({Key? key, required String correoElectronico})
       : _correoElectronicoController = TextEditingController(text: correoElectronico),
         super(key: key);
 
@@ -58,65 +58,86 @@ class IniciarSesion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue[100],
+      backgroundColor: Color(0xFFE3F2FD),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.tag_faces,
-                  size: 50,
-                  color: Colors.black,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 30),
+                Image.asset(
+                  'lib/assets/logo.png',
+                  height: 100, // Ajusta el tamaño según sea necesario
                 ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _correoElectronicoController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Contraseña',
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _login(context);
-                },
-                child: const Text('Iniciar Sesión'),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      _forgotPassword(context);
-                    },
-                    child: const Text('Olvidé mi contraseña'),
+                const SizedBox(height: 30),
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.tag_faces,
+                    size: 50,
+                    color: Colors.black,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      _goToRegister(context); // Ir a la pantalla de registro
-                    },
-                    child: const Text('Registrarse'),
+                ),
+                const SizedBox(height: 40),
+                TextField(
+                  controller: _correoElectronicoController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: 'Email',
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: 'Contraseña',
+                  ),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _login(context);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(vertical: 15),
+                      ),
+                    ),
+                    child: const Text('Iniciar Sesión'),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        _forgotPassword(context);
+                      },
+                      child: const Text('Olvidé mi contraseña'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _goToRegister(context); // Ir a la pantalla de registro
+                      },
+                      child: const Text('Registrarse'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

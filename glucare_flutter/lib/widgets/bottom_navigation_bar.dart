@@ -14,22 +14,22 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2; // Inicializamos con la "Comunidad" seleccionada
 
   static const List<Widget> _widgetOptions = <Widget>[
-    CommunityScreen(),
     ActividadFisicaScreen(),
-    CalendarScreen(),
-    NutritionScreen(),
+    NutritionScreen(), // Nutrición ahora ocupa el lugar de Calendario
+    CommunityScreen(), // La comunidad se coloca en el medio
+    CalendarScreen(), // Calendario ahora ocupa el lugar de Nutrición
     ReminderListScreen(),
     ProfileScreen(),
   ];
 
   static const List<Color> _backgroundColors = <Color>[
-    Color(0xFFE3F2FD), // Color de fondo de Comunidad
     Color(0xFFE3F2FD), // Color de fondo de Actividad Física
-    Color(0xFFE3F2FD), // Color de fondo de Calendario
     Color(0xFFE3F2FD), // Color de fondo de Nutrición
+    Color(0xFFE3F2FD), // Color de fondo de Comunidad
+    Color(0xFFE3F2FD), // Color de fondo de Calendario
     Color(0xFFE3F2FD), // Color de fondo de Recordatorios
     Color(0xFFE3F2FD), // Color de fondo de Perfil
   ];
@@ -43,10 +43,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: _backgroundColors[_selectedIndex], // Cambia el color de fondo según la pantalla seleccionada
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      backgroundColor: _backgroundColors[_selectedIndex], // Establece el color de fondo del Scaffold
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
         margin: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0), // Margen para flotación
         decoration: BoxDecoration(
@@ -65,20 +63,20 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           child: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.group),
-                label: 'Comunidad',
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(Icons.fitness_center),
                 label: 'Actividad Física',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today),
-                label: 'Calendario',
+                icon: Icon(Icons.fastfood), // Icono de Nutrición
+                label: 'Nutrición', // Nutrición ahora ocupa el lugar de Calendario
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.fastfood),
-                label: 'Nutricion',
+                icon: Icon(Icons.group),
+                label: 'Comunidad',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today), // Icono de Calendario
+                label: 'Calendario', // Calendario ahora ocupa el lugar de Nutrición
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.alarm),
