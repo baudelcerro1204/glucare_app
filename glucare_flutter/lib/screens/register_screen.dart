@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glucare/screens/login_screen.dart';
 import 'package:glucare/services/api_service.dart';
+import 'package:glucare/widgets/custom_appbar.dart';
 
 class CrearCuenta extends StatefulWidget {
   const CrearCuenta({super.key});
@@ -56,18 +57,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text('GLUCARE', style: TextStyle(color: Colors.blueAccent)),
-        centerTitle: true,
-      ),
+      appBar: const CustomAppBar(), // Utiliza el CustomAppBar
       body: Container(
         padding: const EdgeInsets.all(16.0),
         color: Colors.lightBlue[50],
