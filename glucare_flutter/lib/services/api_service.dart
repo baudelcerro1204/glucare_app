@@ -19,44 +19,24 @@ class ApiService {
   }
 
   Future<void> login(String correoElectronico, String password) async {
-    final loginData = {
-      'correoElectronico': correoElectronico,
-      'password': password,
-    };
-    print('Enviando solicitud de login con datos: $loginData');
-
-    final response = await _postWithNoRedirect(
-      Uri.parse('$baseUrl/user/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(loginData),
-    );
-
-    print('Respuesta del servidor: ${response.statusCode} - ${response.body}');
-
-    if (response.statusCode != 200) {
-      throw Exception('Email o contraseña incorrectos: ${response.body}');
-    }
-  }
-
-  Future<http.Response> _postWithNoRedirect(Uri url, {Map<String, String>? headers, Object? body}) async {
-    final client = http.Client();
-    final request = http.Request('POST', url)
-      ..headers.addAll(headers ?? {})
-      ..body = body as String;
-
-    final streamedResponse = await client.send(request);
-    final response = await http.Response.fromStream(streamedResponse);
-
-    if (response.isRedirect) {
-      final redirectUrl = response.headers['location'];
-      if (redirectUrl != null) {
-        final redirectResponse = await client.get(Uri.parse(redirectUrl));
-        return http.Response(redirectResponse.body, redirectResponse.statusCode, headers: redirectResponse.headers);
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/user/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'correoElectronico': correoElectronico,
+          'password': password,
+        }),
+      );
+      if (response.statusCode == 200) {
+        print('Login exitoso');
+        // Procesa la respuesta aquí
       } else {
-        throw Exception('Redirección sin URL de destino');
+        print('Error de login: ${response.statusCode}');
+        print('Mensaje del servidor: ${response.body}');
       }
-    } else {
-      return response;
+    } catch (e) {
+      print('Excepción: $e');
     }
   }
 
