@@ -8,7 +8,7 @@ class ApiService {
 
   Future<void> registerUser(Map<String, dynamic> userData) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/user/register'),
+      Uri.parse('$baseUrl/auth/register'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(userData),
     );
@@ -16,28 +16,21 @@ class ApiService {
     if (response.statusCode != 200) {
       throw Exception('Error al registrar usuario: ${response.body}');
     }
+    else {
+      print('Usuario registrado exitosamente');
+    }
   }
 
-  Future<void> login(String correoElectronico, String password) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/user/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'correoElectronico': correoElectronico,
-          'password': password,
-        }),
-      );
-      if (response.statusCode == 200) {
-        print('Login exitoso');
-        // Procesa la respuesta aquí
-      } else {
-        print('Error de login: ${response.statusCode}');
-        print('Mensaje del servidor: ${response.body}');
-      }
-    } catch (e) {
-      print('Excepción: $e');
-    }
+  Future<http.Response> login(String correoElectronico, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'correoElectronico': correoElectronico,
+        'password': password,
+      }),
+    );
+    return response;
   }
 
   Future<Map<String, dynamic>> searchFood(String query) async {

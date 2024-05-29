@@ -11,7 +11,6 @@ class CrearCuenta extends StatefulWidget {
 
 class _CrearCuentaState extends State<CrearCuenta> {
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _apellidoController = TextEditingController();
   final TextEditingController _correoElectronicoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
@@ -30,15 +29,14 @@ class _CrearCuentaState extends State<CrearCuenta> {
 
     final userData = {
       'nombre': _nombreController.text,
-      'apellido': _apellidoController.text,
       'correoElectronico': _correoElectronicoController.text,
-      'contraseña': _passwordController.text,
+      'password': _passwordController.text,
       'edad': int.tryParse(_edadController.text) ?? 0,
       'diabetesTipo': _selectedDiabetesType,
     };
 
     try {
-      final response = await apiService.registerUser(userData);
+      await apiService.registerUser(userData);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registro exitoso')),
       );
@@ -81,17 +79,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
                 TextFormField(
                   controller: _nombreController,
                   decoration: const InputDecoration(
-                    labelText: 'Nombre',
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _apellidoController,
-                  decoration: const InputDecoration(
-                    labelText: 'Apellido',
+                    labelText: 'Nombre Completo',
                     border: OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.white,
