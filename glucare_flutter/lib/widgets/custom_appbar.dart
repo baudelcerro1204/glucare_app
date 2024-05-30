@@ -13,8 +13,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           height: 2000, // Ajusta el tamaño según sea necesario
         ),
       ),
-      backgroundColor: Color(0xFFE3F2FD),
-      iconTheme: IconThemeData(color: Colors.black),
+      backgroundColor: const Color(0xFFE3F2FD),
+      iconTheme: const IconThemeData(color: Colors.black),
+      automaticallyImplyLeading: false, // Esto remueve la flecha de retroceso
     );
   }
 

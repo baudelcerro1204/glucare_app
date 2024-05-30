@@ -7,10 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.glucare.model.User;
 
+
 @Repository
 public interface userRepository extends JpaRepository<User, Long>{
     
     User findByCorreoElectronico(String correoElectronico);
+
+    User findUserById(Long id);
     
     @SuppressWarnings("null")
     ArrayList<User> findAll();

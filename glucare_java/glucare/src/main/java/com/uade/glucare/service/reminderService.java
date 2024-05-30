@@ -61,6 +61,13 @@ public class reminderService {
         return reminderRepository.save(reminder);
     }
 
+    public void deleteReminder(Long id) {
+        Reminder reminder = reminderRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Recordatorio no encontrado con id: " + id));
+
+        reminderRepository.delete(reminder);
+    }
+
     public List<Reminder> getReminders() {
         // Obtener el usuario autenticado
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

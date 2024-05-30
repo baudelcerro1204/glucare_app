@@ -24,6 +24,7 @@ public class ReminderDAO {
 
     private ReminderDTO convertToDTO(Reminder reminder) {
         ReminderDTO dto = new ReminderDTO();
+        dto.setId(reminder.getId());  // Añadir esta línea
         dto.setTitle(reminder.getTitle());
         dto.setDescription(reminder.getDescription());
         dto.setDate(reminder.getDate());

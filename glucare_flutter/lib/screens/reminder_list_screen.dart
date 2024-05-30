@@ -57,29 +57,23 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
     }
   }
 
-  void _deleteReminder(Reminder reminder) {
-    setState(() {
-      _reminders.remove(reminder);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recordatorios'),
+        title: const Text('Recordatorios'),
       ),
       body: ListView.builder(
         itemCount: _reminders.length,
         itemBuilder: (context, index) {
           final reminder = _reminders[index];
           return ListTile(
-            leading: CircleAvatar(
+            leading: const CircleAvatar(
               backgroundColor: Colors.blue,
             ),
             title: Text(reminder.title),
             subtitle: Text(
-              '${reminder.description}\n${reminder.date} ${reminder.time.format(context)}\nEtiqueta: ${reminder.etiqueta}',
+              '${reminder.description}\n${reminder.date} ${reminder.time}\nEtiqueta: ${reminder.etiqueta}',
             ),
             onTap: () {
               _editReminder(context, reminder);
@@ -99,7 +93,7 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
             _addReminder(newReminder); // Agrega el nuevo recordatorio a la lista de recordatorios
           }
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

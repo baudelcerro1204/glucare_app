@@ -38,6 +38,11 @@ public class ReminderController {
         reminderService.updateReminder(id, reminderDetails);
     }
 
+    @DeleteMapping(value = "/delete/{id}")
+    public void deleteReminder(@PathVariable Long id) {
+        reminderService.deleteReminder(id);
+    }
+
     @GetMapping(value = "/getAll")
     public List<ReminderDTO> getReminders(@RequestParam Long userId) {
         return reminderDAO.findAllByUserId(userId);

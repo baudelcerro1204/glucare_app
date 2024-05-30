@@ -37,15 +37,15 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
     _titleController = TextEditingController(text: widget.reminder.title);
     _descriptionController = TextEditingController(text: widget.reminder.description);
     _selectedDate = widget.reminder.date;
-    _selectedTime = widget.reminder.time;
+    _selectedTime = TimeOfDay(hour: widget.reminder.time.hour, minute: widget.reminder.time.minute);
     _repeatDays = List.from(widget.reminder.repeatDays);
-    _selectedTag = widget.reminder.etiqueta!;
+    _selectedTag = widget.reminder.etiqueta ?? '';
     _selectedColor = _tags.firstWhere((tag) => tag['label'] == _selectedTag)['color'];
   }
 
   void _updateReminder() async {
     final editedReminder = Reminder(
-      id: widget.reminder.id, // Usar el id del recordatorio actual
+      id: widget.reminder.id,
       title: _titleController.text,
       description: _descriptionController.text,
       date: _selectedDate ?? DateTime.now(),
@@ -55,18 +55,64 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
     );
 
     try {
-      if (editedReminder.id != null) {
-        await apiService.updateReminder(editedReminder.id!, editedReminder);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Recordatorio actualizado exitosamente')),
-        );
-      } else {
-        throw Exception('ID del recordatorio es nulo');
-      }
+      await apiService.updateReminder(editedReminder.id!, editedReminder);
+      
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Recordatorio actualizado exitosamente')),
+      );
       Navigator.pop(context, editedReminder);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al guardar recordatorio: $e')),
+      );
+    }
+  }
+
+  void _confirmDeleteReminder() async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar eliminación'),
+          content: const Text('¿Estás seguro de que quieres eliminar este recordatorio?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Cancelar
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Confirmar
+              },
+              child: const Text('Borrar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      _deleteReminder();
+    }
+  }
+
+  void _deleteReminder() async {
+    try {
+      await apiService.deleteReminder(widget.reminder.id!);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Recordatorio eliminado exitosamente')),
+      );
+      Navigator.pop(context, widget.reminder);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al eliminar recordatorio: $e')),
       );
     }
   }
@@ -75,37 +121,37 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Recordatorio'),
+        title: const Text('Editar Recordatorio'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(labelText: 'Título del recordatorio'),
+              decoration: const InputDecoration(labelText: 'Título del recordatorio'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Descripción'),
+              decoration: const InputDecoration(labelText: 'Descripción'),
               maxLines: 3,
             ),
-            SizedBox(height: 16.0),
-            Text('Fecha del recordatorio'),
+            const SizedBox(height: 16.0),
+            const Text('Fecha del recordatorio'),
             TextButton(
               onPressed: () => _selectDate(context),
               child: Text(_selectedDate != null ? DateFormat('dd/MM/yyyy').format(_selectedDate!) : 'Seleccionar fecha'),
             ),
-            SizedBox(height: 16.0),
-            Text('Hora del recordatorio'),
+            const SizedBox(height: 16.0),
+            const Text('Hora del recordatorio'),
             TextButton(
               onPressed: () => _selectTime(context),
               child: Text(_selectedTime != null ? _selectedTime!.format(context) : 'Seleccionar hora'),
             ),
-            SizedBox(height: 16.0),
-            Text('Días de repetición'),
+            const SizedBox(height: 16.0),
+            const Text('Días de repetición'),
             Wrap(
               spacing: 8.0,
               children: List.generate(7, (index) {
@@ -120,8 +166,8 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                 );
               }),
             ),
-            SizedBox(height: 16.0),
-            Text('Etiqueta del recordatorio'),
+            const SizedBox(height: 16.0),
+            const Text('Etiqueta del recordatorio'),
             DropdownButtonFormField<String>(
               value: _selectedTag,
               items: _tags.map((tag) {
@@ -132,7 +178,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                       CircleAvatar(
                         backgroundColor: tag['color'],
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(tag['label']),
                     ],
                   ),
@@ -145,10 +191,19 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                 });
               },
             ),
-            SizedBox(height: 32.0),
-            ElevatedButton(
-              onPressed: _updateReminder,
-              child: Text('Guardar Cambios'),
+            const SizedBox(height: 32.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: _updateReminder,
+                  child: const Text('Guardar Cambios'),
+                ),
+                ElevatedButton(
+                  onPressed: _confirmDeleteReminder,
+                  child: const Text('Borrar Recordatorio'),
+                ),
+              ],
             ),
           ],
         ),

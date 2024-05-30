@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:glucare/model/Reminder.dart';
+import 'package:glucare/model/UserDTO.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,7 +20,6 @@ class ApiService {
       throw Exception('Error al registrar usuario: ${response.body}');
     }
     else {
-      print('Usuario registrado exitosamente');
     }
   }
 
@@ -40,11 +40,60 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('jwt_token', token);
       await prefs.setInt('user_id', userId);
-      print('Login exitoso y token guardado: $token');
     } else {
       throw Exception('Error de login: ${response.statusCode}');
     }
   }
+
+  Future<UserDTO> getUserProfile() async {
+  final token = await _getToken();
+  final userId = await _getUserId(); 
+  if (token == null) {
+    throw Exception('Token no encontrado');
+  }
+  if (userId == null) {
+    throw Exception('User ID no encontrado');
+  }
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/users/profile/$userId'), 
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> responseData = jsonDecode(response.body);
+    return UserDTO.fromJson(responseData);
+  } else if (response.statusCode == 403) {
+    throw Exception('Error de autorización: ${response.statusCode} ${response.body}');
+  } else {
+    throw Exception('Error al obtener perfil de usuario: ${response.statusCode} ${response.body}');
+  }
+}
+
+  Future<void> updateUserProfile(UserDTO userData) async {
+  final token = await _getToken();
+  final userId = await _getUserId();
+
+  if (token == null || userId == null) {
+    throw Exception('No se pudo obtener el token o el userId.');
+  }
+
+  final response = await http.put(
+    Uri.parse('$baseUrl/users/update/$userId'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+    body: jsonEncode(userData.toJson()), // Convertir el objeto UserDTO a JSON
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('Error al actualizar perfil de usuario: ${response.statusCode}');
+  }
+}
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -63,8 +112,6 @@ class ApiService {
     }
 
     final requestBody = jsonEncode(reminder.toJson());
-    print('Request Body: $requestBody');
-    print('Token usado en la solicitud: $token');
 
     final response = await http.post(
       Uri.parse('$baseUrl/reminders/save'),
@@ -75,8 +122,6 @@ class ApiService {
       body: requestBody,
     );
 
-    print('Response Status: ${response.statusCode}');
-    print('Response Body: ${response.body}');
 
     if (response.statusCode != 200) {
       throw Exception('Error al guardar recordatorio: ${response.body}');
@@ -85,7 +130,7 @@ class ApiService {
 
   Future<List<Reminder>> getReminders() async {
     final token = await _getToken();
-    final userId = await _getUserId();
+    final userId = await _getUserId(); // Asegúrate de obtener el userId aquí
     if (token == null) {
       throw Exception('Token no encontrado');
     }
@@ -101,8 +146,6 @@ class ApiService {
       },
     );
 
-    print('Response Status: ${response.statusCode}');
-    print('Response Body: ${response.body}');
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = jsonDecode(response.body);
@@ -121,11 +164,9 @@ class ApiService {
     }
 
     final requestBody = jsonEncode(reminder.toJson());
-    print('Request Body: $requestBody');
-    print('Token usado en la solicitud: $token');
 
     final response = await http.put(
-      Uri.parse('$baseUrl/reminders/update/${reminder.id}'),
+      Uri.parse('$baseUrl/reminders/update/$id'), // Usar el ID del recordatorio en la URL
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -133,12 +174,29 @@ class ApiService {
       body: requestBody,
     );
 
-    print('Response Status: ${response.statusCode}');
-    print('Response Body: ${response.body}');
-    print(id);
 
     if (response.statusCode != 200) {
       throw Exception('Error al actualizar recordatorio: ${response.body}');
+    }
+  }
+
+  Future<void> deleteReminder(int id) async {
+    final token = await _getToken();
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/reminders/delete/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al eliminar recordatorio: ${response.body}');
     }
   }
 
