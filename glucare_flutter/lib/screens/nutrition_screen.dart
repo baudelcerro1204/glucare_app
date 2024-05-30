@@ -177,7 +177,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
                     }
                   },
                   decoration: InputDecoration(
-                    hintText: 'Buscar recetas...',
+                    hintText: 'Buscar comidas...',
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
