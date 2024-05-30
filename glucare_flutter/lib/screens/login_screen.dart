@@ -12,11 +12,13 @@ class IniciarSesion extends StatelessWidget {
       : _correoElectronicoController = TextEditingController(text: correoElectronico),
         super(key: key);
 
+  // Método para manejar el inicio de sesión
   void _login(BuildContext context) async {
     final String correoElectronico = _correoElectronicoController.text;
     final String password = _passwordController.text;
 
     if (correoElectronico.isEmpty || password.isEmpty) {
+      // Mostrar mensaje de error si los campos están vacíos
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, complete todos los campos')),
       );
@@ -24,30 +26,39 @@ class IniciarSesion extends StatelessWidget {
     }
 
     try {
-      await apiService.login(correoElectronico, password);
-      // Inicio de sesión exitoso
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Inicio de sesión exitoso')),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainScreen()),
-      );
+      final response = await apiService.login(correoElectronico, password);
+      if (response.statusCode == 200) {
+        // Mostrar mensaje de éxito y navegar a la pantalla principal
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Inicio de sesión exitoso')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        // Mostrar mensaje de error en el inicio de sesión
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email o contraseña incorrectos')),
+        );
+      }
     } catch (e) {
       print(e);
-      // Error en el inicio de sesión
+      // Mostrar mensaje de error en el inicio de sesión
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email o contraseña incorrectos')),
       );
     }
   }
 
+  // Método para manejar el olvido de contraseña
   void _forgotPassword(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Funcionalidad de recuperar contraseña')),
     );
   }
 
+  // Método para navegar a la pantalla de registro
   void _goToRegister(BuildContext context) {
     Navigator.push(
       context,

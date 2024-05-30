@@ -9,17 +9,26 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue
@@ -32,14 +41,17 @@ public class User {
     @Column(name = "correoElectronico")
     private String correoElectronico;
 
-    @Column(name = "contraseña")
-    private String contraseña;
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "edad")
     private int edad;
 
     @Column(name = "diabetesTipo")
     private int diabetesTipo;
+
+    @Column(name = "Role")
+    private Role role;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
@@ -60,98 +72,34 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Reminder> recordatorios;
 
-    //Getter y setters
-
-    public Long getId() {
-        return id;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public String getNombre() {
-        return nombre;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getCorreoElectronico() {
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getUsername() {
         return correoElectronico;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public int getEdad() {
-        return edad;
-    }
-
-    public int getDiabetesTipo() {
-        return diabetesTipo;
-    }
-
-    public VirtualPet getMascotaVirtual() {
-        return mascotaVirtual;
-    }
-
-    public List<DiaryEntry> getHistorialDiario() {
-        return historialDiario;
-    }
-
-    public List<Medicine> getMedicamentos() {
-        return medicamentos;
-    }
-
-    public List<FoodItem> getAlimentacion() {
-        return alimentacion;
-    }
-
-    public List<PhysicalActivity> getActividadFisica() {
-        return actividadFisica;
-    }
-
-    public List<Reminder> getRecordatorios() {
-        return recordatorios;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-    }
-
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-
-    public void setDiabetesTipo(int diabetesTipo) {
-        this.diabetesTipo = diabetesTipo;
-    }
-
-    public void setMascotaVirtual(VirtualPet mascotaVirtual) {
-        this.mascotaVirtual = mascotaVirtual;
-    }
-
-    public void setHistorialDiario(List<DiaryEntry> historialDiario) {
-        this.historialDiario = historialDiario;
-    }
-
-    public void setMedicamentos(List<Medicine> medicamentos) {
-        this.medicamentos = medicamentos;
-    }
-
-    public void setAlimentacion(List<FoodItem> alimentacion) {
-        this.alimentacion = alimentacion;
-    }
-
-    public void setActividadFisica(List<PhysicalActivity> actividadFisica) {
-        this.actividadFisica = actividadFisica;
-    }
-
-    public void setRecordatorios(List<Reminder> recordatorios) {
-        this.recordatorios = recordatorios;
     }
 
 }
