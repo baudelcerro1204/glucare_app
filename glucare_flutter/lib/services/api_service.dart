@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:glucare/model/Reminder.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   final String baseUrl;
@@ -21,7 +23,7 @@ class ApiService {
     }
   }
 
-  Future<http.Response> login(String correoElectronico, String password) async {
+  Future<void> login(String correoElectronico, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
       headers: {'Content-Type': 'application/json'},
@@ -30,7 +32,114 @@ class ApiService {
         'password': password,
       }),
     );
-    return response;
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      final token = responseData['token'];
+      final userId = responseData['userId']; // Obtener el userId
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('jwt_token', token);
+      await prefs.setInt('user_id', userId);
+      print('Login exitoso y token guardado: $token');
+    } else {
+      throw Exception('Error de login: ${response.statusCode}');
+    }
+  }
+
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt_token');
+  }
+
+  Future<int?> _getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('user_id');
+  }
+
+  Future<void> saveReminder(Reminder reminder) async {
+    final token = await _getToken();
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+
+    final requestBody = jsonEncode(reminder.toJson());
+    print('Request Body: $requestBody');
+    print('Token usado en la solicitud: $token');
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/reminders/save'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: requestBody,
+    );
+
+    print('Response Status: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al guardar recordatorio: ${response.body}');
+    }
+  }
+
+  Future<List<Reminder>> getReminders() async {
+    final token = await _getToken();
+    final userId = await _getUserId();
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+    if (userId == null) {
+      throw Exception('User ID no encontrado');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/reminders/getAll?userId=$userId'), // Incluye el userId en la solicitud
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('Response Status: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      return responseData.map((json) => Reminder.fromJson(json)).toList();
+    } else if (response.statusCode == 403) {
+      throw Exception('Error de autorización: ${response.statusCode} ${response.body}');
+    } else {
+      throw Exception('Error al obtener recordatorios: ${response.statusCode} ${response.body}');
+    }
+  }
+
+  Future<void> updateReminder(int id, Reminder reminder) async {
+    final token = await _getToken();
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+
+    final requestBody = jsonEncode(reminder.toJson());
+    print('Request Body: $requestBody');
+    print('Token usado en la solicitud: $token');
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/reminders/update/${reminder.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: requestBody,
+    );
+
+    print('Response Status: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+    print(id);
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al actualizar recordatorio: ${response.body}');
+    }
   }
 
   Future<Map<String, dynamic>> searchFood(String query) async {

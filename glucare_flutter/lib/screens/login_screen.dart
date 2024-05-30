@@ -8,7 +8,7 @@ class IniciarSesion extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
-  IniciarSesion({Key? key, required String correoElectronico})
+  IniciarSesion({Key? key, required String correoElectronico}) 
       : _correoElectronicoController = TextEditingController(text: correoElectronico),
         super(key: key);
 
@@ -26,22 +26,15 @@ class IniciarSesion extends StatelessWidget {
     }
 
     try {
-      final response = await apiService.login(correoElectronico, password);
-      if (response.statusCode == 200) {
-        // Mostrar mensaje de éxito y navegar a la pantalla principal
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Inicio de sesión exitoso')),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-        );
-      } else {
-        // Mostrar mensaje de error en el inicio de sesión
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Email o contraseña incorrectos')),
-        );
-      }
+      await apiService.login(correoElectronico, password);
+      // Mostrar mensaje de éxito y navegar a la pantalla principal
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Inicio de sesión exitoso')),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+      );
     } catch (e) {
       print(e);
       // Mostrar mensaje de error en el inicio de sesión

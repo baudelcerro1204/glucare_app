@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glucare/screens/reminder_screen.dart';
+import 'package:glucare/model/Reminder.dart';
+import 'package:glucare/services/api_service.dart';
 import 'package:intl/intl.dart';
-
 
 class NewReminderScreen extends StatefulWidget {
   @override
@@ -17,6 +17,7 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
   String _selectedTag = 'Mediciones de Azucar';
   Color _selectedColor = Colors.blue;
   late TextEditingController _otherTagController;
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
   final List<Map<String, dynamic>> _tags = [
     {'label': 'Mediciones de Azucar', 'color': Colors.blue},
@@ -36,6 +37,30 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
     _selectedTime = TimeOfDay.now();
     _otherTagController = TextEditingController();
   }
+
+  void _saveReminder() async {
+  final newReminder = Reminder(
+    title: _titleController.text,
+    description: _descriptionController.text,
+    date: _selectedDate ?? DateTime.now(),
+    time: _selectedTime ?? TimeOfDay.now(),
+    repeatDays: _repeatDays,
+    etiqueta: _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
+  );
+
+  try {
+    await apiService.saveReminder(newReminder);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Recordatorio guardado con éxito')),
+    );
+    Navigator.pop(context);
+  } catch (e) {
+    print(e);  // Asegúrate de imprimir la excepción
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error al guardar recordatorio: $e')),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -124,18 +149,7 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
               ],
               SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () {
-                  final newReminder = Reminder(
-                    title: _titleController.text,
-                    description: _descriptionController.text,
-                    date: _selectedDate ?? DateTime.now(),
-                    time: _selectedTime ?? TimeOfDay.now(),
-                    repeatDays: _repeatDays,
-                    etiqueta: _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
-                    color: _selectedTag == 'Otro' ? Colors.grey : _selectedColor,
-                  );
-                  Navigator.pop(context, newReminder);
-                },
+                onPressed: _saveReminder,
                 child: Text('Guardar Recordatorio'),
               ),
             ],

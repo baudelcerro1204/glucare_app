@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glucare/screens/reminder_screen.dart';
+import 'package:glucare/model/Reminder.dart';
+import 'package:glucare/services/api_service.dart';
 import 'package:intl/intl.dart';
 
 class EditReminderScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   List<bool> _repeatDays = [];
   String _selectedTag = '';
   Color _selectedColor = Colors.blue;
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
   final List<Map<String, dynamic>> _tags = [
     {'label': 'Mediciones de Azucar', 'color': Colors.blue},
@@ -37,8 +39,36 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
     _selectedDate = widget.reminder.date;
     _selectedTime = widget.reminder.time;
     _repeatDays = List.from(widget.reminder.repeatDays);
-    _selectedTag = widget.reminder.etiqueta;
+    _selectedTag = widget.reminder.etiqueta!;
     _selectedColor = _tags.firstWhere((tag) => tag['label'] == _selectedTag)['color'];
+  }
+
+  void _updateReminder() async {
+    final editedReminder = Reminder(
+      id: widget.reminder.id, // Usar el id del recordatorio actual
+      title: _titleController.text,
+      description: _descriptionController.text,
+      date: _selectedDate ?? DateTime.now(),
+      time: _selectedTime ?? TimeOfDay.now(),
+      repeatDays: _repeatDays,
+      etiqueta: _selectedTag,
+    );
+
+    try {
+      if (editedReminder.id != null) {
+        await apiService.updateReminder(editedReminder.id!, editedReminder);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Recordatorio actualizado exitosamente')),
+        );
+      } else {
+        throw Exception('ID del recordatorio es nulo');
+      }
+      Navigator.pop(context, editedReminder);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al guardar recordatorio: $e')),
+      );
+    }
   }
 
   @override
@@ -117,18 +147,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
             ),
             SizedBox(height: 32.0),
             ElevatedButton(
-              onPressed: () {
-                final editedReminder = Reminder(
-                  title: _titleController.text,
-                  description: _descriptionController.text,
-                  date: _selectedDate ?? DateTime.now(),
-                  time: _selectedTime ?? TimeOfDay.now(),
-                  repeatDays: _repeatDays,
-                  etiqueta: _selectedTag,
-                  color: _selectedColor,
-                );
-                Navigator.pop(context, editedReminder);
-              },
+              onPressed: _updateReminder,
               child: Text('Guardar Cambios'),
             ),
           ],

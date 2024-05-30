@@ -11,7 +11,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "reminder")
 public class Reminder {
@@ -19,7 +28,7 @@ public class Reminder {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private String id;
+    private Long id;
 
     @Column(name = "title")
     private String title;
@@ -42,70 +51,4 @@ public class Reminder {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    // Getters
-    public String getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public List<Boolean> getRepeatDays() {
-        return repeatDays;
-    }
-
-    public String getEtiqueta() {
-        return etiqueta;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public void setTime(LocalTime time) {
-        this.time = time;
-    }
-
-    public void setRepeatDays(List<Boolean> repeatDays) {
-        this.repeatDays = repeatDays;
-    }
-
-    public void setEtiqueta(String etiqueta) {
-        this.etiqueta = etiqueta;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

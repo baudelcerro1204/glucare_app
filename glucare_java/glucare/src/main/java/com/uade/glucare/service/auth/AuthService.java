@@ -22,31 +22,32 @@ public class AuthService {
     private final userRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreoElectronico(), request.getPassword()));
         UserDetails user = userRepository.findByCorreoElectronico(request.getCorreoElectronico());
         String token = jwtService.getToken(user);
+        User userEntity = (User) user;
         return AuthResponse.builder()
             .token(token)
+            .userId(userEntity.getId())
             .build();
     }
 
     public AuthResponse register(RegisterRequest request) {
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = User.builder()
             .nombre(request.getNombre())
             .correoElectronico(request.getCorreoElectronico())
-            .password(encodedPassword)
+            .password(request.getPassword())
             .edad(request.getEdad())
             .diabetesTipo(request.getDiabetesTipo())
             .role(Role.USER)
             .build();
         userRepository.save(user);
-
+        String token = jwtService.getToken(user);
         return AuthResponse.builder()
-            .token(jwtService.getToken(user))
+            .token(token)
+            .userId(user.getId())
             .build();
     }
 }
