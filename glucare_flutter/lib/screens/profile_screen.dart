@@ -10,7 +10,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  ApiService _apiService = ApiService('http://192.168.0.5:8080');
+  ApiService _apiService = ApiService('http://192.168.0.243:8080');
 
   UserDTO? _user;
   TextEditingController _nameController = TextEditingController();

@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
         '/': (context) => const MainScreen(),
         '/create_post': (context) => const CreatePostScreen(),

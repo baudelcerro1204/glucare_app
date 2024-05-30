@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glucare/screens/create_post_screen.dart';
+import 'create_post_screen.dart';
+import 'information_screen.dart'; // Importa la nueva pantalla
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -29,8 +30,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
       _posts.add({
         'username': 'NewUser',
         'userProfilePic': 'https://via.placeholder.com/150',
-        'postImage': 'https://via.placeholder.com/600',
         'description': description,
+        'date': DateTime.now().toString(),
       });
     });
   }
@@ -40,7 +41,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Comunidad'),
-        backgroundColor: Color(0xFFE3F2FD), // Cambia el color de la AppBar si es necesario
+        backgroundColor: Color(0xFFC0DEF4), // Cambia el color de la AppBar
+        leading: IconButton(
+          icon: const Icon(Icons.info_outline),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const InformationScreen()),
+            );
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -58,7 +68,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ],
       ),
       body: Container(
-        color: Color(0xFFE3F2FD), // Fondo azul claro
+        color: Color(0xFFC0DEF4), // Fondo azul claro
         child: ListView(
           children: _posts.map((post) {
             return Card(
