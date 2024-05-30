@@ -22,6 +22,7 @@ public class AuthService {
     private final userRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder; // Añadir PasswordEncoder
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreoElectronico(), request.getPassword()));
@@ -38,7 +39,7 @@ public class AuthService {
         User user = User.builder()
             .nombre(request.getNombre())
             .correoElectronico(request.getCorreoElectronico())
-            .password(request.getPassword())
+            .password(passwordEncoder.encode(request.getPassword())) // Codificar la contraseña
             .edad(request.getEdad())
             .diabetesTipo(request.getDiabetesTipo())
             .role(Role.USER)
