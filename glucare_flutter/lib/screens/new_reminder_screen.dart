@@ -17,7 +17,7 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
   String _selectedTag = 'Mediciones de Azucar';
   Color _selectedColor = Colors.blue;
   late TextEditingController _otherTagController;
-  final ApiService apiService = ApiService('http://192.168.0.5:8080');
+  final ApiService apiService = ApiService('http://192.168.0.15:8080');
 
   final List<Map<String, dynamic>> _tags = [
     {'label': 'Mediciones de Azucar', 'color': Colors.blue},
