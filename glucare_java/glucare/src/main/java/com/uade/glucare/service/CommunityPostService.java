@@ -47,5 +47,5 @@ public class CommunityPostService {
         // Guarda la publicación en el repositorio
         return communityPostRepository.save(post);
     }
-    
+
 }
