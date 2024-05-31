@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:glucare/model/CommunityPost.dart';
 import 'package:glucare/model/Reminder.dart';
 import 'package:glucare/model/UserDTO.dart';
 import 'package:http/http.dart' as http;
@@ -199,6 +200,52 @@ class ApiService {
       throw Exception('Error al eliminar recordatorio: ${response.body}');
     }
   }
+
+  Future<CommunityPost> createPost(CommunityPost post) async {
+    final token = await _getToken();
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/posts/create'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(post.toJson()),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return CommunityPost.fromJson(jsonDecode(response.body));
+    } else {
+      print('Error: ${response.statusCode} ${response.body}');
+      throw Exception('Error al crear publicación: ${response.body}');
+    }
+  }
+
+  Future<List<CommunityPost>> getPosts() async {
+    final token = await _getToken();
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/posts/getAll'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      return responseData.map((json) => CommunityPost.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al obtener publicaciones: ${response.body}');
+    }
+  }
+
 
   Future<Map<String, dynamic>> searchFood(String query) async {
     const String appId = 'be89c2af';

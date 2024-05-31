@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glucare/model/CommunityPost.dart';
+import 'package:glucare/services/api_service.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -9,12 +11,47 @@ class CreatePostScreen extends StatefulWidget {
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
   final TextEditingController _descriptionController = TextEditingController();
+  late ApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+    apiService = ApiService('http://192.168.0.5:8080'); // Asegúrate de cambiar la URL a la de tu API
+  }
+
+  Future<void> _publishPost() async {
+    String description = _descriptionController.text;
+    if (description.isEmpty) {
+      // Mostrar un mensaje de error si la descripción está vacía
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('La descripción no puede estar vacía')),
+      );
+      return;
+    }
+
+    try {
+      CommunityPost newPost = CommunityPost(
+        id: null,
+        content: description,
+        date: DateTime.now(),
+        userName: '', // Este valor será asignado por el backend
+      );
+      await apiService.createPost(newPost);
+      Navigator.pop(context, true); // Regresa a la pantalla anterior e indica que se publicó un post
+    } catch (e) {
+      // Manejar errores
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al publicar el post: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Post'),
+        title: const Text('Crear Publicación'),
         backgroundColor: Color(0xFFE3F2FD), // Cambia el color de la AppBar si es necesario
       ),
       body: Container(
@@ -66,9 +103,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Lógica para publicar el post
-                  },
+                  onPressed: _publishPost,
                   child: const Text('Publicar'),
                 ),
               ),

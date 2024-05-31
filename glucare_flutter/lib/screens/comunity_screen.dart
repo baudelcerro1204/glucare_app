@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:glucare/model/CommunityPost.dart';
+import 'package:glucare/services/api_service.dart';
 import 'create_post_screen.dart';
-import 'information_screen.dart'; // Importa la nueva pantalla
+import 'information_screen.dart';
+
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -10,30 +13,30 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
-  final List<Map<String, String>> _posts = [
-    {
-      'username': 'Dan Williams',
-      'userProfilePic': 'https://via.placeholder.com/150',
-      'description': 'Recuerdo claramente la primera vez que tuve una hipoglucemia severa. Fue aterrador. Me sentí mareado, débil y completamente desorientado. Mis manos temblaban y no podía pensar con claridad. Por suerte, tenía mi kit de emergencia a mano y pude recuperarme. Fue un recordatorio impactante de lo importante que es llevar un control constante de mi glucosa y estar preparado para cualquier situación.',
-      'date': '10/5/2024'
-    },
-    {
-      'username': 'Karen Han',
-      'userProfilePic': 'https://via.placeholder.com/150',
-      'description': 'Desde que fui diagnosticado con diabetes, mi vida ha dado un giro inesperado. De repente, me encontré enfrentando un mundo de decisiones complicadas y ajustes en mi estilo de vida. Pasé por momentos de incertidumbre y preocupación, pero también descubrí una fuerza interior que ni siquiera sabía que tenía.',
-      'date': '11/5/2025'
-    },
-  ];
+  late ApiService apiService;
+  List<CommunityPost> _posts = [];
+  bool _isLoading = true;
 
-  void _addPost(String description) {
-    setState(() {
-      _posts.add({
-        'username': 'NewUser',
-        'userProfilePic': 'https://via.placeholder.com/150',
-        'description': description,
-        'date': DateTime.now().toString(),
+  @override
+  void initState() {
+    super.initState();
+    apiService = ApiService('http://192.168.0.5:8080'); // Asegúrate de cambiar la URL a la de tu API
+    _fetchPosts();
+  }
+
+  Future<void> _fetchPosts() async {
+    try {
+      List<CommunityPost> posts = await apiService.getPosts();
+      setState(() {
+        _posts = posts;
+        _isLoading = false;
       });
-    });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      // Manejar errores
+    }
   }
 
   @override
@@ -41,7 +44,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Comunidad'),
-        backgroundColor: Color(0xFFC0DEF4), // Cambia el color de la AppBar
+        backgroundColor: const Color(0xFFC0DEF4),
         leading: IconButton(
           icon: const Icon(Icons.info_outline),
           onPressed: () {
@@ -60,66 +63,68 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 MaterialPageRoute(builder: (context) => const CreatePostScreen()),
               );
 
-              if (result != null) {
-                _addPost(result);
+              if (result == true) {
+                _fetchPosts(); // Refresca la lista de posts si se creó uno nuevo
               }
             },
           ),
         ],
       ),
       body: Container(
-        color: Color(0xFFC0DEF4), // Fondo azul claro
-        child: ListView(
-          children: _posts.map((post) {
-            return Card(
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(post['userProfilePic']!),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              post['username']!,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text(
-                              post['date']!,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+        color: const Color(0xFFC0DEF4),
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView(
+                children: _posts.map((post) {
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      post['description']!,
-                      style: TextStyle(fontSize: 14),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                              ),
+                              const SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    post.userName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    post.date.toLocal().toString(),
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            post.content,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ),
-            );
-          }).toList(),
-        ),
       ),
     );
   }

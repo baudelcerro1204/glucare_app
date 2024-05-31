@@ -17,6 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -58,19 +60,11 @@ public class User implements UserDetails {
     private VirtualPet mascotaVirtual;
 
     @OneToMany(mappedBy = "user")
-    private List<DiaryEntry> historialDiario;
-
-    @OneToMany(mappedBy = "user")
-    private List<Medicine> medicamentos;
-
-    @OneToMany(mappedBy = "user")
-    private List<FoodItem> alimentacion;
-
-    @OneToMany(mappedBy = "user")
-    private List<PhysicalActivity> actividadFisica;
-
-    @OneToMany(mappedBy = "user")
     private List<Reminder> recordatorios;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<CommunityPost> communityPosts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
