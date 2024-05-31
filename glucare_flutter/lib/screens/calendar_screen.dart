@@ -31,6 +31,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(
         title: const Text('Calendario'),
         backgroundColor: Color(0xFFE3F2FD),
+        automaticallyImplyLeading: false, // Desactiva la flecha de retroceso
       ),
       body: Container(
         color: Color(0xFFE3F2FD), // Color de fondo del cuerpo

@@ -157,6 +157,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
         appBar: AppBar(
           title: Text('Nutrición'),
           backgroundColor: Color(0xFFE3F2FD),
+          automaticallyImplyLeading: false, // Desactiva la flecha de retroceso
         ),
         body: Container(
           color: Color(0xFFE3F2FD),

@@ -7,13 +7,11 @@ class ActividadFisicaScreen extends StatefulWidget {
   ActividadFisicaScreenState createState() => ActividadFisicaScreenState();
 }
 
-
 void main() {
   runApp(const MaterialApp(
     home: ActividadFisicaScreen(),
   ));
 }
-
 
 class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
   String _selectedIntensity = 'Baja';
@@ -24,6 +22,7 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
       appBar: AppBar(
         title: const Text('Actividad Física'),
         backgroundColor: const Color(0xFFE3F2FD), // Color de fondo de la AppBar
+        automaticallyImplyLeading: false, // Desactiva la flecha de retroceso
       ),
       body: Container(
         color: const Color(0xFFE3F2FD), // Fondo azul claro

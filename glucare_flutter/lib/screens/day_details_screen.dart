@@ -16,6 +16,9 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   String _foodIntake = '';
   String _notes = '';
 
+  // Lista ficticia de recordatorios para ilustrar el diseño
+  final List<String> _reminders = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,6 +116,15 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     });
                   }),
                   SizedBox(height: 20),
+                  if (_reminders.isNotEmpty) ...[
+                    Text(
+                      'Recordatorios:',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    ..._reminders.map((reminder) => _buildReminderCard(reminder)).toList(),
+                    SizedBox(height: 20),
+                  ],
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
@@ -148,6 +160,28 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                   border: InputBorder.none,
                 ),
                 onChanged: onChanged,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReminderCard(String reminder) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Icon(Icons.notifications, color: Colors.blue),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                reminder,
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ],
