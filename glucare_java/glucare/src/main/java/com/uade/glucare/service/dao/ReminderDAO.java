@@ -1,5 +1,6 @@
 package com.uade.glucare.service.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.uade.glucare.dto.ReminderDTO;
@@ -22,9 +23,15 @@ public class ReminderDAO {
         return reminders.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<ReminderDTO> findAllByUserIdAndDate(Long userId, LocalDate date) {
+        List<Reminder> reminders = reminderRepository.findByUserIdAndDate(userId, date);
+        return reminders.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
     private ReminderDTO convertToDTO(Reminder reminder) {
         ReminderDTO dto = new ReminderDTO();
-        dto.setId(reminder.getId());  // Añadir esta línea
+        dto.setId(reminder.getId());
         dto.setTitle(reminder.getTitle());
         dto.setDescription(reminder.getDescription());
         dto.setDate(reminder.getDate());
@@ -34,3 +41,4 @@ public class ReminderDAO {
         return dto;
     }
 }
+

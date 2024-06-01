@@ -1,8 +1,10 @@
 package com.uade.glucare.controller.demo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.uade.glucare.service.reminderService;
@@ -46,5 +48,11 @@ public class ReminderController {
     @GetMapping(value = "/getAll")
     public List<ReminderDTO> getReminders(@RequestParam Long userId) {
         return reminderDAO.findAllByUserId(userId);
+    }
+
+    @GetMapping("/byDate")
+    public List<ReminderDTO> getRemindersByDate(@RequestParam Long userId, 
+                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return reminderDAO.findAllByUserIdAndDate(userId, date);
     }
 }

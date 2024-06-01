@@ -18,11 +18,9 @@ class _CrearCuentaState extends State<CrearCuenta> {
   final TextEditingController _edadController = TextEditingController();
   String _selectedDiabetesType = '1';
 
-<<<<<<< HEAD
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
-=======
+
   final ApiService apiService = ApiService('http://192.168.0.15:8080');
->>>>>>> origin/main
+
 
   void _registerUser() async {
     if (_passwordController.text != _confirmPasswordController.text) {

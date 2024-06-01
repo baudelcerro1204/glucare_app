@@ -6,11 +6,8 @@ import 'package:glucare/services/api_service.dart';
 class IniciarSesion extends StatelessWidget {
   final TextEditingController _correoElectronicoController;
   final TextEditingController _passwordController = TextEditingController();
-<<<<<<< HEAD
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
-=======
+
   final ApiService apiService = ApiService('http://192.168.0.15:8080');
->>>>>>> origin/main
 
   IniciarSesion({Key? key, required String correoElectronico}) 
       : _correoElectronicoController = TextEditingController(text: correoElectronico),

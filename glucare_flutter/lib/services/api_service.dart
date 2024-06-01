@@ -261,4 +261,30 @@ class ApiService {
       throw Exception('Error al obtener información nutricional: ${response.body}');
     }
   }
+  
+    Future<List<Reminder>> getRemindersByDate(DateTime date) async {
+    final token = await _getToken();
+    final userId = await _getUserId();
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+    if (userId == null) {
+      throw Exception('User ID no encontrado');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/reminders/byDate?userId=$userId&date=${date.toIso8601String().split('T')[0]}'), 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      return responseData.map((json) => Reminder.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al obtener recordatorios: ${response.statusCode} ${response.body}');
+    }
+  }
 }

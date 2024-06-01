@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:glucare/model/Reminder.dart';
+import 'package:glucare/services/api_service.dart';
 
 class DayDetailsScreen extends StatefulWidget {
   final DateTime date;
 
-  const DayDetailsScreen({super.key, required this.date});
+  const DayDetailsScreen({Key? key, required this.date}) : super(key: key);
 
   @override
   _DayDetailsScreenState createState() => _DayDetailsScreenState();
@@ -15,9 +17,27 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   String _physicalActivity = '';
   String _foodIntake = '';
   String _notes = '';
+  List<Reminder> _reminders = [];
+  final ApiService apiService = ApiService('http://192.168.0.15:8080');
 
-  // Lista ficticia de recordatorios para ilustrar el diseño
-  final List<String> _reminders = [];
+  @override
+  void initState() {
+    super.initState();
+    _fetchReminders();
+  }
+
+  Future<void> _fetchReminders() async {
+    try {
+      final reminders = await apiService.getRemindersByDate(widget.date);
+      setState(() {
+        _reminders = reminders;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al obtener recordatorios: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +188,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     );
   }
 
-  Widget _buildReminderCard(String reminder) {
+  Widget _buildReminderCard(Reminder reminder) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -179,14 +199,33 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
             Icon(Icons.notifications, color: Colors.blue),
             SizedBox(width: 10),
             Expanded(
-              child: Text(
-                reminder,
-                style: TextStyle(fontSize: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    reminder.title,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${reminder.date.toLocal().toShortString()}, ${reminder.time.format(context)}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    reminder.description,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+extension DateTimeExtension on DateTime {
+  String toShortString() {
+    return '${this.year}-${this.month.toString().padLeft(2, '0')}-${this.day.toString().padLeft(2, '0')}';
   }
 }

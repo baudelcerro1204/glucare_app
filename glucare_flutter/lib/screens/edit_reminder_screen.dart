@@ -20,12 +20,11 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   List<bool> _repeatDays = [];
   String _selectedTag = '';
   Color _selectedColor = Colors.blue;
-<<<<<<< HEAD
+
   late TextEditingController _otherTagController;
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
-=======
+
   final ApiService apiService = ApiService('http://192.168.0.15:8080');
->>>>>>> origin/main
+
 
   final List<Map<String, dynamic>> _tags = [
     {'label': 'Mediciones de Azucar', 'color': Colors.blue},

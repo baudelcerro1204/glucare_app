@@ -20,11 +20,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
   @override
   void initState() {
     super.initState();
-<<<<<<< HEAD
-    apiService = ApiService('http://192.168.0.136:8080'); // Asegúrate de cambiar la URL a la de tu API
-=======
+
     apiService = ApiService('http://192.168.0.15:8080'); // Asegúrate de cambiar la URL a la de tu API
->>>>>>> origin/main
+
     _fetchPosts();
   }
 
