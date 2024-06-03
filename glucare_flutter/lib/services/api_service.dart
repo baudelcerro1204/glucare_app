@@ -46,6 +46,26 @@ class ApiService {
     }
   }
 
+  Future<void> logout() async {
+    final token = await _getToken();
+    if (token == null) {
+      throw Exception('No token found');
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/logout'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      print('Server response: ${response.body}');
+      throw Exception('Failed to logout');
+    }
+  }
+
   Future<UserDTO> getUserProfile() async {
   final token = await _getToken();
   final userId = await _getUserId(); 
@@ -99,6 +119,11 @@ class ApiService {
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('jwt_token');
+  }
+
+    Future<void> deleteToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('jwt_token');
   }
 
   Future<int?> _getUserId() async {

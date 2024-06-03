@@ -51,4 +51,8 @@ public class AuthService {
             .userId(user.getId())
             .build();
     }
+
+    public void logout(String token) {
+        
+    }
 }

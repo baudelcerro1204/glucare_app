@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glucare/model/UserDTO.dart';
 import 'package:glucare/services/api_service.dart';
+import 'package:glucare/screens/login_screen.dart'; // Asegúrate de tener esta importación
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -10,9 +11,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-  ApiService _apiService = ApiService('http://192.168.0.15:8080');
-
+  ApiService _apiService = ApiService('http://192.168.0.5:8080');
 
   UserDTO? _user;
   TextEditingController _nameController = TextEditingController();
@@ -42,20 +41,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _saveProfile() async {
     try {
-      // Actualizar los datos del usuario en el backend utilizando _apiService
       final updatedUser = UserDTO(
         nombre: _nameController.text,
         correoElectronico: _emailController.text,
         edad: int.parse(_ageController.text),
       );
       await _apiService.updateUserProfile(updatedUser);
-      // Actualizar el estado local con los nuevos datos del usuario
       setState(() {
         _user = updatedUser;
         _isEditing = false;
       });
     } catch (e) {
       print('Error al guardar perfil de usuario: $e');
+    }
+  }
+
+  Future<void> _logout() async {
+    try {
+      await _apiService.logout();
+      await _apiService.deleteToken();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => IniciarSesion(correoElectronico: '')),
+      );
+    } catch (e) {
+      print('Error al cerrar sesión: $e');
     }
   }
 
@@ -71,9 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              // Funcionalidad de cerrar sesión a agregar posteriormente
-            },
+            onPressed: _logout,
           ),
         ],
       ),
