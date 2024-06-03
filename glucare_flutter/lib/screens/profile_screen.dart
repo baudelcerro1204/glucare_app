@@ -11,7 +11,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  ApiService _apiService = ApiService('http://192.168.0.5:8080');
+  ApiService _apiService = ApiService('http://192.168.0.73:8080');
 
   UserDTO? _user;
   TextEditingController _nameController = TextEditingController();
@@ -62,7 +62,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await _apiService.deleteToken();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => IniciarSesion(correoElectronico: '')),
+        MaterialPageRoute(
+            builder: (context) => IniciarSesion(correoElectronico: '')),
       );
     } catch (e) {
       print('Error al cerrar sesión: $e');
@@ -72,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue[100],
+      backgroundColor: Color(0xFFC0DEF4),
       appBar: AppBar(
         title: const Text('Perfil'),
         backgroundColor: Colors.transparent,
@@ -144,18 +145,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             )
           : Center(child: CircularProgressIndicator()),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_isEditing) {
-            _saveProfile();
-          } else {
-            setState(() {
-              _isEditing = true;
-            });
-          }
-        },
-        child: Icon(_isEditing ? Icons.check : Icons.edit),
-        backgroundColor: Colors.blue[900],
-      ),
+          onPressed: () {
+            if (_isEditing) {
+              _saveProfile();
+            } else {
+              setState(() {
+                _isEditing = true;
+              });
+            }
+          },
+          child: Icon(_isEditing ? Icons.check : Icons.edit),
+          backgroundColor: Color(0xFF2A629A)),
     );
   }
 }

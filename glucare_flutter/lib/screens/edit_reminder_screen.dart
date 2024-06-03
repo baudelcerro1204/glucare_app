@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
 class EditReminderScreen extends StatefulWidget {
   final Reminder reminder;
 
-  const EditReminderScreen({Key? key, required this.reminder}) : super(key: key);
+  const EditReminderScreen({Key? key, required this.reminder})
+      : super(key: key);
 
   @override
   _EditReminderScreenState createState() => _EditReminderScreenState();
@@ -25,7 +26,6 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
 
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
-
   final List<Map<String, dynamic>> _tags = [
     {'label': 'Mediciones de Azucar', 'color': Colors.blue},
     {'label': 'Dosis de Insulina', 'color': Colors.green},
@@ -39,12 +39,15 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.reminder.title);
-    _descriptionController = TextEditingController(text: widget.reminder.description);
+    _descriptionController =
+        TextEditingController(text: widget.reminder.description);
     _selectedDate = widget.reminder.date;
-    _selectedTime = TimeOfDay(hour: widget.reminder.time.hour, minute: widget.reminder.time.minute);
+    _selectedTime = TimeOfDay(
+        hour: widget.reminder.time.hour, minute: widget.reminder.time.minute);
     _repeatDays = List.from(widget.reminder.repeatDays);
     _selectedTag = widget.reminder.etiqueta!;
-    _selectedColor = _tags.firstWhere((tag) => tag['label'] == _selectedTag)['color'];
+    _selectedColor =
+        _tags.firstWhere((tag) => tag['label'] == _selectedTag)['color'];
     _otherTagController = TextEditingController();
   }
 
@@ -56,7 +59,8 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
       date: _selectedDate ?? DateTime.now(),
       time: _selectedTime ?? TimeOfDay.now(),
       repeatDays: _repeatDays,
-      etiqueta: _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
+      etiqueta:
+          _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
     );
 
     try {
@@ -81,7 +85,8 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content: const Text('¿Estás seguro de que quieres eliminar este recordatorio?'),
+          content: const Text(
+              '¿Estás seguro de que quieres eliminar este recordatorio?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -144,8 +149,10 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
           color: Color(0xFFE3F2FD), // Color de fondo
           child: SingleChildScrollView(
             child: Container(
-              color: Color(0xFFE3F2FD), // Color de fondo para cubrir toda la pantalla
-              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+              color: Color(
+                  0xFFE3F2FD), // Color de fondo para cubrir toda la pantalla
+              constraints:
+                  BoxConstraints(minHeight: MediaQuery.of(context).size.height),
               padding: EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +186,9 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                   TextButton(
                     onPressed: () => _selectDate(context),
                     child: Text(
-                      _selectedDate != null ? DateFormat('dd/MM/yyyy').format(_selectedDate!) : 'Seleccionar fecha',
+                      _selectedDate != null
+                          ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
+                          : 'Seleccionar fecha',
                       style: TextStyle(color: Colors.black),
                     ),
                     style: TextButton.styleFrom(
@@ -194,7 +203,9 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                   TextButton(
                     onPressed: () => _selectTime(context),
                     child: Text(
-                      _selectedTime != null ? _selectedTime!.format(context) : 'Seleccionar hora',
+                      _selectedTime != null
+                          ? _selectedTime!.format(context)
+                          : 'Seleccionar hora',
                       style: TextStyle(color: Colors.black),
                     ),
                     style: TextButton.styleFrom(
@@ -244,7 +255,8 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                     onChanged: (value) {
                       setState(() {
                         _selectedTag = value!;
-                        _selectedColor = _tags.firstWhere((tag) => tag['label'] == value)['color'];
+                        _selectedColor = _tags.firstWhere(
+                            (tag) => tag['label'] == value)['color'];
                       });
                     },
                     decoration: InputDecoration(
@@ -275,7 +287,8 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                       onPressed: _updateReminder,
                       child: Text('Guardar Cambios'),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 24.0, vertical: 12.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -287,7 +300,8 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                       onPressed: _confirmDeleteReminder,
                       child: Text('Borrar Recordatorio'),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 24.0, vertical: 12.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),

@@ -12,15 +12,15 @@ class CrearCuenta extends StatefulWidget {
 
 class _CrearCuentaState extends State<CrearCuenta> {
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _correoElectronicoController = TextEditingController();
+  final TextEditingController _correoElectronicoController =
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _edadController = TextEditingController();
   String _selectedDiabetesType = '1';
 
-
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
-
 
   void _registerUser() async {
     if (_passwordController.text != _confirmPasswordController.text) {
@@ -46,7 +46,8 @@ class _CrearCuentaState extends State<CrearCuenta> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => IniciarSesion(correoElectronico: _correoElectronicoController.text),
+          builder: (context) => IniciarSesion(
+              correoElectronico: _correoElectronicoController.text),
         ),
       );
     } catch (e) {
@@ -145,9 +146,13 @@ class _CrearCuentaState extends State<CrearCuenta> {
                 const SizedBox(height: 32.0),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                    padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(horizontal: 50, vertical: 15)),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 15)),
                   ),
                   onPressed: _registerUser,
                   child: const Text('Registrarse'),

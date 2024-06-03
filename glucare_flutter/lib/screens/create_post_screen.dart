@@ -16,7 +16,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   void initState() {
     super.initState();
-    apiService = ApiService('http://192.168.0.5:8080'); // Asegúrate de cambiar la URL a la de tu API
+    apiService = ApiService(
+        'http://192.168.0.73:8080'); // Asegúrate de cambiar la URL a la de tu API
   }
 
   Future<void> _publishPost() async {
@@ -37,7 +38,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         userName: '', // Este valor será asignado por el backend
       );
       await apiService.createPost(newPost);
-      Navigator.pop(context, true); // Regresa a la pantalla anterior e indica que se publicó un post
+      Navigator.pop(context,
+          true); // Regresa a la pantalla anterior e indica que se publicó un post
     } catch (e) {
       // Manejar errores
       print(e);
@@ -52,10 +54,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Crear Publicación'),
-        backgroundColor: Color(0xFFE3F2FD), // Cambia el color de la AppBar si es necesario
+        backgroundColor:
+            Color(0xFFC0DEF4), // Cambia el color de la AppBar si es necesario
       ),
       body: Container(
-        color: Color(0xFFE3F2FD), // Fondo azul claro
+        color: Color(0xFFC0DEF4), // Fondo azul claro
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

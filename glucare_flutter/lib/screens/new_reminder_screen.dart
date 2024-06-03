@@ -46,7 +46,8 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
       date: _selectedDate ?? DateTime.now(),
       time: _selectedTime ?? TimeOfDay.now(),
       repeatDays: _repeatDays,
-      etiqueta: _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
+      etiqueta:
+          _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
     );
 
     try {
@@ -72,7 +73,7 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Nuevo Recordatorio'),
-          backgroundColor: Color(0xFFE3F2FD),
+          backgroundColor: Color(0xFFC0DEF4),
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -82,11 +83,13 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
           ),
         ),
         body: Container(
-          color: Color(0xFFE3F2FD), // Color de fondo
+          color: Color(0xFFC0DEF4), // Color de fondo
           child: SingleChildScrollView(
             child: Container(
-              color: Color(0xFFE3F2FD), // Color de fondo para cubrir toda la pantalla
-              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+              color: Color(
+                  0xFFC0DEF4), // Color de fondo para cubrir toda la pantalla
+              constraints:
+                  BoxConstraints(minHeight: MediaQuery.of(context).size.height),
               padding: EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +123,9 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
                   TextButton(
                     onPressed: () => _selectDate(context),
                     child: Text(
-                      _selectedDate != null ? DateFormat('dd/MM/yyyy').format(_selectedDate!) : 'Seleccionar fecha',
+                      _selectedDate != null
+                          ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
+                          : 'Seleccionar fecha',
                       style: TextStyle(color: Colors.black),
                     ),
                     style: TextButton.styleFrom(
@@ -135,7 +140,9 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
                   TextButton(
                     onPressed: () => _selectTime(context),
                     child: Text(
-                      _selectedTime != null ? _selectedTime!.format(context) : 'Seleccionar hora',
+                      _selectedTime != null
+                          ? _selectedTime!.format(context)
+                          : 'Seleccionar hora',
                       style: TextStyle(color: Colors.black),
                     ),
                     style: TextButton.styleFrom(
@@ -185,7 +192,8 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
                     onChanged: (value) {
                       setState(() {
                         _selectedTag = value!;
-                        _selectedColor = _tags.firstWhere((tag) => tag['label'] == value)['color'];
+                        _selectedColor = _tags.firstWhere(
+                            (tag) => tag['label'] == value)['color'];
                       });
                     },
                     decoration: InputDecoration(
@@ -216,7 +224,8 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
                       onPressed: _saveReminder,
                       child: Text('Guardar Recordatorio'),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 24.0, vertical: 12.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),

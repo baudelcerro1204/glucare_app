@@ -10,7 +10,8 @@ class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
-  _CustomBottomNavigationBarState createState() => _CustomBottomNavigationBarState();
+  _CustomBottomNavigationBarState createState() =>
+      _CustomBottomNavigationBarState();
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
@@ -26,12 +27,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   ];
 
   static const List<Color> _backgroundColors = <Color>[
-    Color(0xFFE3F2FD), // Color de fondo de Actividad Física
-    Color(0xFFE3F2FD), // Color de fondo de Nutrición
-    Color(0xFFE3F2FD), // Color de fondo de Comunidad
-    Color(0xFFE3F2FD), // Color de fondo de Calendario
-    Color(0xFFE3F2FD), // Color de fondo de Recordatorios
-    Color(0xFFE3F2FD), // Color de fondo de Perfil
+    Color(0xFFC0DEF4), // Color de fondo de Actividad Física
+    Color(0xFFC0DEF4), // Color de fondo de Nutrición
+    Color(0xFFC0DEF4), // Color de fondo de Comunidad
+    Color(0xFFC0DEF4), // Color de fondo de Calendario
+    Color(0xFFC0DEF4), // Color de fondo de Recordatorios
+    Color(0xFFC0DEF4), // Color de fondo de Perfil
   ];
 
   void _onItemTapped(int index) {
@@ -43,10 +44,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColors[_selectedIndex], // Establece el color de fondo del Scaffold
+      backgroundColor: _backgroundColors[
+          _selectedIndex], // Establece el color de fondo del Scaffold
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
-        margin: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0), // Margen para flotación
+        margin: EdgeInsets.only(
+            bottom: 10.0, left: 10.0, right: 10.0), // Margen para flotación
         decoration: BoxDecoration(
           color: Color(0xFF2A629A), // Color de fondo especificado
           borderRadius: BorderRadius.circular(30.0), // Borde redondeado
@@ -68,7 +71,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.fastfood), // Icono de Nutrición
-                label: 'Nutrición', // Nutrición ahora ocupa el lugar de Calendario
+                label:
+                    'Nutrición', // Nutrición ahora ocupa el lugar de Calendario
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.group),
@@ -76,7 +80,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_today), // Icono de Calendario
-                label: 'Calendario', // Calendario ahora ocupa el lugar de Nutrición
+                label:
+                    'Calendario', // Calendario ahora ocupa el lugar de Nutrición
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.alarm),
@@ -90,11 +95,15 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             currentIndex: _selectedIndex,
             selectedItemColor: Colors.blue,
             unselectedItemColor: Colors.white,
-            backgroundColor: Colors.transparent, // Fondo transparente para mostrar el color del contenedor
+            backgroundColor: Colors
+                .transparent, // Fondo transparente para mostrar el color del contenedor
             onTap: _onItemTapped,
-            type: BottomNavigationBarType.fixed, // Asegura que el fondo cubra todo
-            showSelectedLabels: true, // Muestra los labels solo cuando están seleccionados
-            showUnselectedLabels: false, // Oculta los labels cuando no están seleccionados
+            type: BottomNavigationBarType
+                .fixed, // Asegura que el fondo cubra todo
+            showSelectedLabels:
+                true, // Muestra los labels solo cuando están seleccionados
+            showUnselectedLabels:
+                false, // Oculta los labels cuando no están seleccionados
           ),
         ),
       ),

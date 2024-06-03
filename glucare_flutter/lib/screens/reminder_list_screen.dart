@@ -16,7 +16,6 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
 
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
-
   @override
   void initState() {
     super.initState();
@@ -63,7 +62,7 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color(0xFFE3F2FD), // Color de fondo
+        color: Color(0xFFC0DEF4), // Color de fondo
         child: Column(
           children: [
             Padding(
@@ -87,11 +86,13 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
                   final reminder = _reminders[index];
                   var etiqueta = reminder.etiqueta;
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    margin:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     padding: EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16.0), // Bordes más redondeados
+                      borderRadius:
+                          BorderRadius.circular(16.0), // Bordes más redondeados
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black12,
@@ -131,6 +132,7 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
           }
         },
         child: const Icon(Icons.add),
+        backgroundColor: Color(0xFF2A629A),
       ),
     );
   }

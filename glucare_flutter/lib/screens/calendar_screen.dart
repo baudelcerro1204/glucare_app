@@ -30,11 +30,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendario'),
-        backgroundColor: Color(0xFFE3F2FD),
+        backgroundColor: Color(0xFFC0DEF4),
         automaticallyImplyLeading: false, // Desactiva la flecha de retroceso
       ),
       body: Container(
-        color: Color(0xFFE3F2FD), // Color de fondo del cuerpo
+        color: Color(0xFFC0DEF4), // Color de fondo del cuerpo
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -42,7 +42,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white, // Fondo blanco solo para el calendario
-                  borderRadius: BorderRadius.circular(12.0), // Bordes completamente redondeados
+                  borderRadius: BorderRadius.circular(
+                      12.0), // Bordes completamente redondeados
                 ),
                 child: TableCalendar(
                   locale: 'es_ES',
@@ -60,7 +61,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DayDetailsScreen(date: selectedDay),
+                        builder: (context) =>
+                            DayDetailsScreen(date: selectedDay),
                       ),
                     );
                   },
@@ -98,8 +100,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       color: Colors.white,
                       fontSize: 20.0,
                     ),
-                    leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
-                    rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
+                    leftChevronIcon:
+                        Icon(Icons.chevron_left, color: Colors.white),
+                    rightChevronIcon:
+                        Icon(Icons.chevron_right, color: Colors.white),
                     headerMargin: EdgeInsets.only(bottom: 8.0),
                     decoration: BoxDecoration(
                       color: Color(0xFF2A629A),

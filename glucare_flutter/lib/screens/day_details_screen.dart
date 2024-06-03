@@ -45,7 +45,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Color(0xFFE3F2FD),
+        color: Color(0xFFC0DEF4),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -90,7 +90,8 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                         },
                         child: Text('SI'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: _hadHypoHyper ? Colors.blue : Colors.white,
+                          backgroundColor:
+                              _hadHypoHyper ? Colors.blue : Colors.white,
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(20),
                         ),
@@ -104,7 +105,8 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                         },
                         child: Text('NO'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: !_hadHypoHyper ? Colors.blue : Colors.white,
+                          backgroundColor:
+                              !_hadHypoHyper ? Colors.blue : Colors.white,
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(20),
                         ),
@@ -112,19 +114,23 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  _buildDetailCard('Dosis de insulina aplicada', Icons.edit, (value) {
+                  _buildDetailCard('Dosis de insulina aplicada', Icons.edit,
+                      (value) {
                     setState(() {
                       _insulinDose = value;
                     });
                   }),
                   SizedBox(height: 20),
-                  _buildDetailCard('Actividad física realizada', Icons.fitness_center, (value) {
+                  _buildDetailCard(
+                      'Actividad física realizada', Icons.fitness_center,
+                      (value) {
                     setState(() {
                       _physicalActivity = value;
                     });
                   }),
                   SizedBox(height: 20),
-                  _buildDetailCard('Alimentos ingeridos', Icons.restaurant, (value) {
+                  _buildDetailCard('Alimentos ingeridos', Icons.restaurant,
+                      (value) {
                     setState(() {
                       _foodIntake = value;
                     });
@@ -139,10 +145,13 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                   if (_reminders.isNotEmpty) ...[
                     Text(
                       'Recordatorios:',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
-                    ..._reminders.map((reminder) => _buildReminderCard(reminder)).toList(),
+                    ..._reminders
+                        .map((reminder) => _buildReminderCard(reminder))
+                        .toList(),
                     SizedBox(height: 20),
                   ],
                   Center(
@@ -163,7 +172,8 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     );
   }
 
-  Widget _buildDetailCard(String label, IconData icon, Function(String) onChanged) {
+  Widget _buildDetailCard(
+      String label, IconData icon, Function(String) onChanged) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,

@@ -21,11 +21,11 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Actividad Física'),
-        backgroundColor: const Color(0xFFE3F2FD), // Color de fondo de la AppBar
+        backgroundColor: const Color(0xFFC0DEF4), // Color de fondo de la AppBar
         automaticallyImplyLeading: false, // Desactiva la flecha de retroceso
       ),
       body: Container(
-        color: const Color(0xFFE3F2FD), // Fondo azul claro
+        color: const Color(0xFFC0DEF4), // Fondo azul claro
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -60,7 +60,8 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(value),
                           ),
                         );
@@ -81,20 +82,56 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
               ),
               const SizedBox(height: 10),
               if (_selectedIntensity == 'Baja') ...[
-                ActivitySuggestionCard(activity: 'Yoga', duration: '30 minutos', info: 'Ideal para estiramientos y relajación.'),
-                ActivitySuggestionCard(activity: 'Pilates', duration: '40 minutos', info: 'Excelente para fortalecer el core.'),
-                ActivitySuggestionCard(activity: 'Ciclismo', duration: '60 minutos', info: 'Perfecto para mejorar la resistencia.'),
-                ActivitySuggestionCard(activity: 'Baile', duration: '45 minutos', info: 'Divertido y bueno para el cardio.'),
+                ActivitySuggestionCard(
+                    activity: 'Yoga',
+                    duration: '30 minutos',
+                    info: 'Ideal para estiramientos y relajación.'),
+                ActivitySuggestionCard(
+                    activity: 'Pilates',
+                    duration: '40 minutos',
+                    info: 'Excelente para fortalecer el core.'),
+                ActivitySuggestionCard(
+                    activity: 'Ciclismo',
+                    duration: '60 minutos',
+                    info: 'Perfecto para mejorar la resistencia.'),
+                ActivitySuggestionCard(
+                    activity: 'Baile',
+                    duration: '45 minutos',
+                    info: 'Divertido y bueno para el cardio.'),
               ] else if (_selectedIntensity == 'Media') ...[
-                ActivitySuggestionCard(activity: 'Football', duration: '90 minutos', info: 'Gran ejercicio cardiovascular y de equipo.'),
-                ActivitySuggestionCard(activity: 'Handball', duration: '60 minutos', info: 'Bueno para la agilidad y resistencia.'),
-                ActivitySuggestionCard(activity: 'Basquetball', duration: '60 minutos', info: 'Excelente para el cardio y la coordinación.'),
-                ActivitySuggestionCard(activity: 'Tenis', duration: '60 minutos', info: 'Ideal para la velocidad y agilidad.'),
+                ActivitySuggestionCard(
+                    activity: 'Football',
+                    duration: '90 minutos',
+                    info: 'Gran ejercicio cardiovascular y de equipo.'),
+                ActivitySuggestionCard(
+                    activity: 'Handball',
+                    duration: '60 minutos',
+                    info: 'Bueno para la agilidad y resistencia.'),
+                ActivitySuggestionCard(
+                    activity: 'Basquetball',
+                    duration: '60 minutos',
+                    info: 'Excelente para el cardio y la coordinación.'),
+                ActivitySuggestionCard(
+                    activity: 'Tenis',
+                    duration: '60 minutos',
+                    info: 'Ideal para la velocidad y agilidad.'),
               ] else if (_selectedIntensity == 'Alta') ...[
-                ActivitySuggestionCard(activity: 'Natación', duration: '60 minutos', info: 'Perfecto para todo el cuerpo.'),
-                ActivitySuggestionCard(activity: 'Boxeo', duration: '45 minutos', info: 'Excelente para el cardio y la fuerza.'),
-                ActivitySuggestionCard(activity: 'Cardio', duration: '30 minutos', info: 'Ideal para quemar calorías rápidamente.'),
-                ActivitySuggestionCard(activity: 'Atletismo', duration: '60 minutos', info: 'Perfecto para mejorar la velocidad y resistencia.'),
+                ActivitySuggestionCard(
+                    activity: 'Natación',
+                    duration: '60 minutos',
+                    info: 'Perfecto para todo el cuerpo.'),
+                ActivitySuggestionCard(
+                    activity: 'Boxeo',
+                    duration: '45 minutos',
+                    info: 'Excelente para el cardio y la fuerza.'),
+                ActivitySuggestionCard(
+                    activity: 'Cardio',
+                    duration: '30 minutos',
+                    info: 'Ideal para quemar calorías rápidamente.'),
+                ActivitySuggestionCard(
+                    activity: 'Atletismo',
+                    duration: '60 minutos',
+                    info: 'Perfecto para mejorar la velocidad y resistencia.'),
               ],
             ],
           ),

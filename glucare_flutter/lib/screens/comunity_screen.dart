@@ -4,7 +4,6 @@ import 'package:glucare/services/api_service.dart';
 import 'create_post_screen.dart';
 import 'information_screen.dart';
 
-
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
 
@@ -21,7 +20,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void initState() {
     super.initState();
 
-    apiService = ApiService('http://192.168.0.5:8080'); // Asegúrate de cambiar la URL a la de tu API
+    apiService = ApiService(
+        'http://192.168.0.5:8080'); // Asegúrate de cambiar la URL a la de tu API
 
     _fetchPosts();
   }
@@ -52,7 +52,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const InformationScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const InformationScreen()),
             );
           },
         ),
@@ -62,7 +63,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
             onPressed: () async {
               final result = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CreatePostScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const CreatePostScreen()),
               );
 
               if (result == true) {
@@ -79,7 +81,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
             : ListView(
                 children: _posts.map((post) {
                   return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 15),
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -92,7 +95,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                           Row(
                             children: [
                               CircleAvatar(
-                                backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                                backgroundImage: NetworkImage(
+                                    'https://via.placeholder.com/150'),
                               ),
                               const SizedBox(width: 10),
                               Column(

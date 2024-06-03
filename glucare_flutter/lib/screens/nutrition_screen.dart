@@ -18,8 +18,25 @@ class _NutritionScreenState extends State<NutritionScreen> {
   String _selectedCategory = '';
 
   final List<String> _suggestions = [
-    'Manzana', 'Plátano', 'Pollo', 'Salmón', 'Brócoli', 'Avena', 'Yogur', 'Aguacate', 'Huevos', 'Tomate', 
-    'Espinaca', 'Almendras', 'Arándanos', 'Quinoa', 'Batata', 'Pavo', 'Mantequilla de maní', 'Zanahorias', 'Garbanzos'
+    'Manzana',
+    'Plátano',
+    'Pollo',
+    'Salmón',
+    'Brócoli',
+    'Avena',
+    'Yogur',
+    'Aguacate',
+    'Huevos',
+    'Tomate',
+    'Espinaca',
+    'Almendras',
+    'Arándanos',
+    'Quinoa',
+    'Batata',
+    'Pavo',
+    'Mantequilla de maní',
+    'Zanahorias',
+    'Garbanzos'
   ];
 
   @override
@@ -35,7 +52,8 @@ class _NutritionScreenState extends State<NutritionScreen> {
     });
 
     try {
-      List<String> randomSuggestions = (_suggestions..shuffle()).take(5).toList();
+      List<String> randomSuggestions =
+          (_suggestions..shuffle()).take(5).toList();
       for (String suggestion in randomSuggestions) {
         final foodData = await apiService.searchFood(suggestion);
         final List<Map<String, dynamic>> foods = (foodData['hints'] as List)
@@ -91,7 +109,9 @@ class _NutritionScreenState extends State<NutritionScreen> {
     });
 
     try {
-      final List<String> foodsToSearch = _categoryFoods[category]!.take((_categoryFoods[category]!.length / 2).round()).toList();
+      final List<String> foodsToSearch = _categoryFoods[category]!
+          .take((_categoryFoods[category]!.length / 2).round())
+          .toList();
 
       for (String food in foodsToSearch) {
         final foodData = await apiService.searchFood(food);
@@ -116,34 +136,113 @@ class _NutritionScreenState extends State<NutritionScreen> {
 
   final Map<String, List<String>> _categoryFoods = {
     'Desayuno': [
-      'Avena con Frutas', 'Tostada con Aguacate', 'Yogur Griego con Granola', 'Huevos Revueltos con Espinacas y Tomates',
-      'Batido de Frutas', 'Panqueques de Trigo Integral', 'Tazón de Acaí', 'Omelette de Claras de Huevo', 'Muffins de Arándanos',
-      'Tostadas Francesas', 'Pudín de Chía', 'Burrito de Desayuno', 'Quinoa con Leche', 'Ensalada de Frutas', 'Cereal Integral',
-      'Bagel con Salmón Ahumado', 'Revuelto de Tofu', 'Sándwich de Desayuno', 'Crepas de Trigo Integral', 'Pan de Plátano'
+      'Avena con Frutas',
+      'Tostada con Aguacate',
+      'Yogur Griego con Granola',
+      'Huevos Revueltos con Espinacas y Tomates',
+      'Batido de Frutas',
+      'Panqueques de Trigo Integral',
+      'Tazón de Acaí',
+      'Omelette de Claras de Huevo',
+      'Muffins de Arándanos',
+      'Tostadas Francesas',
+      'Pudín de Chía',
+      'Burrito de Desayuno',
+      'Quinoa con Leche',
+      'Ensalada de Frutas',
+      'Cereal Integral',
+      'Bagel con Salmón Ahumado',
+      'Revuelto de Tofu',
+      'Sándwich de Desayuno',
+      'Crepas de Trigo Integral',
+      'Pan de Plátano'
     ],
     'Almuerzo': [
-      'Ensalada César con Pollo', 'Sándwich de Pavo', 'Quinoa con Verduras Asadas', 'Pasta con Pesto', 'Sopa de Lentejas',
-      'Ensalada Griega', 'Wrap de Pollo', 'Arroz Integral con Frijoles Negros', 'Sushi Casero', 'Chili Vegetariano', 'Fajitas de Res',
-      'Ensalada de Quinoa y Garbanzos', 'Hamburguesas de Lentejas', 'Lasaña de Verduras', 'Pollo al Horno con Batatas',
-      'Risotto de Espárragos', 'Tortilla Española', 'Ensalada de Atún', 'Pizza Casera', 'Sopa de Pollo con Verduras'
+      'Ensalada César con Pollo',
+      'Sándwich de Pavo',
+      'Quinoa con Verduras Asadas',
+      'Pasta con Pesto',
+      'Sopa de Lentejas',
+      'Ensalada Griega',
+      'Wrap de Pollo',
+      'Arroz Integral con Frijoles Negros',
+      'Sushi Casero',
+      'Chili Vegetariano',
+      'Fajitas de Res',
+      'Ensalada de Quinoa y Garbanzos',
+      'Hamburguesas de Lentejas',
+      'Lasaña de Verduras',
+      'Pollo al Horno con Batatas',
+      'Risotto de Espárragos',
+      'Tortilla Española',
+      'Ensalada de Atún',
+      'Pizza Casera',
+      'Sopa de Pollo con Verduras'
     ],
     'Merienda': [
-      'Fruta Fresca', 'Yogur Griego con Miel y Nueces', 'Hummus con Palitos de Verdura', 'Barra de Granola', 'Batido de Proteínas',
-      'Palitos de Queso', 'Manzana con Mantequilla de Maní', 'Nueces Mixtas', 'Tortitas de Arroz', 'Galletas Integrales',
-      'Chips de Verduras', 'Edamame', 'Batido Verde', 'Yogur con Frutas Frescas', 'Crudités con Dip de Yogur',
-      'Muffins de Avena', 'Palomitas de Maíz', 'Gelatina de Frutas', 'Galletas de Avena', 'Batido de Plátano'
+      'Fruta Fresca',
+      'Yogur Griego con Miel y Nueces',
+      'Hummus con Palitos de Verdura',
+      'Barra de Granola',
+      'Batido de Proteínas',
+      'Palitos de Queso',
+      'Manzana con Mantequilla de Maní',
+      'Nueces Mixtas',
+      'Tortitas de Arroz',
+      'Galletas Integrales',
+      'Chips de Verduras',
+      'Edamame',
+      'Batido Verde',
+      'Yogur con Frutas Frescas',
+      'Crudités con Dip de Yogur',
+      'Muffins de Avena',
+      'Palomitas de Maíz',
+      'Gelatina de Frutas',
+      'Galletas de Avena',
+      'Batido de Plátano'
     ],
     'Cena': [
-      'Salmón a la Parrilla', 'Tacos de Pollo', 'Bistec con Ensalada', 'Curry de Garbanzos', 'Pizza de Verduras', 'Enchiladas de Pollo',
-      'Sopa Minestrone', 'Brochetas de Camarones', 'Pavo Asado con Batatas', 'Ensalada de Espinacas y Fresas',
-      'Curry de Pollo', 'Ratatouille', 'Pasta Primavera', 'Sopa de Miso', 'Pollo Teriyaki', 'Albóndigas de Pavo',
-      'Pimientos Rellenos', 'Tarta de Espinacas', 'Pollo a la Cazadora', 'Sopa de Calabaza'
+      'Salmón a la Parrilla',
+      'Tacos de Pollo',
+      'Bistec con Ensalada',
+      'Curry de Garbanzos',
+      'Pizza de Verduras',
+      'Enchiladas de Pollo',
+      'Sopa Minestrone',
+      'Brochetas de Camarones',
+      'Pavo Asado con Batatas',
+      'Ensalada de Espinacas y Fresas',
+      'Curry de Pollo',
+      'Ratatouille',
+      'Pasta Primavera',
+      'Sopa de Miso',
+      'Pollo Teriyaki',
+      'Albóndigas de Pavo',
+      'Pimientos Rellenos',
+      'Tarta de Espinacas',
+      'Pollo a la Cazadora',
+      'Sopa de Calabaza'
     ],
     'Snacks': [
-      'Nueces Mixtas', 'Palomitas de Maíz', 'Galletas Integrales', 'Queso con Galletas', 'Chips de Verduras', 'Barras de Frutas y Nueces',
-      'Tortitas de Arroz con Aguacate', 'Huevos Cocidos', 'Chocolate Negro', 'Batido', 'Hummus con Chips de Pita',
-      'Mix de Frutas Secas', 'Palitos de Verdura con Hummus', 'Rodajas de Manzana con Mantequilla de Almendra', 'Requesón con Frutas',
-      'Edamame', 'Bolitas Energéticas', 'Yogur Griego con Miel', 'Palitos de Apio con Mantequilla de Maní'
+      'Nueces Mixtas',
+      'Palomitas de Maíz',
+      'Galletas Integrales',
+      'Queso con Galletas',
+      'Chips de Verduras',
+      'Barras de Frutas y Nueces',
+      'Tortitas de Arroz con Aguacate',
+      'Huevos Cocidos',
+      'Chocolate Negro',
+      'Batido',
+      'Hummus con Chips de Pita',
+      'Mix de Frutas Secas',
+      'Palitos de Verdura con Hummus',
+      'Rodajas de Manzana con Mantequilla de Almendra',
+      'Requesón con Frutas',
+      'Edamame',
+      'Bolitas Energéticas',
+      'Yogur Griego con Miel',
+      'Palitos de Apio con Mantequilla de Maní'
     ]
   };
 
@@ -156,11 +255,11 @@ class _NutritionScreenState extends State<NutritionScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Nutrición'),
-          backgroundColor: Color(0xFFE3F2FD),
+          backgroundColor: Color(0xFFC0DEF4),
           automaticallyImplyLeading: false, // Desactiva la flecha de retroceso
         ),
         body: Container(
-          color: Color(0xFFE3F2FD),
+          color: Color(0xFFC0DEF4),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -311,7 +410,8 @@ class _NutritionScreenState extends State<NutritionScreen> {
                                 ? Center(
                                     child: Text(
                                       'No se encontraron resultados',
-                                      style: TextStyle(fontSize: 18, color: Colors.black54),
+                                      style: TextStyle(
+                                          fontSize: 18, color: Colors.black54),
                                     ),
                                   )
                                 : ListView.builder(
@@ -319,11 +419,13 @@ class _NutritionScreenState extends State<NutritionScreen> {
                                     itemBuilder: (context, index) {
                                       final food = _foods[index];
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 8.0),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(15),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.black12,
@@ -334,7 +436,10 @@ class _NutritionScreenState extends State<NutritionScreen> {
                                           ),
                                           child: ListTile(
                                             leading: food['image'] != null
-                                                ? Image.network(food['image'], width: 50, height: 50, fit: BoxFit.cover)
+                                                ? Image.network(food['image'],
+                                                    width: 50,
+                                                    height: 50,
+                                                    fit: BoxFit.cover)
                                                 : null,
                                             title: Text(food['label']),
                                             subtitle: Text(
@@ -343,7 +448,8 @@ class _NutritionScreenState extends State<NutritionScreen> {
                                             onTap: () {
                                               showDialog(
                                                 context: context,
-                                                builder: (context) => AlertDialog(
+                                                builder: (context) =>
+                                                    AlertDialog(
                                                   title: Text(food['label']),
                                                   content: Text(
                                                     'Información Nutricional:\n\n'
@@ -354,8 +460,11 @@ class _NutritionScreenState extends State<NutritionScreen> {
                                                   ),
                                                   actions: [
                                                     TextButton(
-                                                      onPressed: () => Navigator.pop(context),
-                                                      child: const Text('Cerrar'),
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                      child:
+                                                          const Text('Cerrar'),
                                                     ),
                                                   ],
                                                 ),

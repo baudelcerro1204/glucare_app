@@ -9,8 +9,9 @@ class IniciarSesion extends StatelessWidget {
 
   final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
-  IniciarSesion({Key? key, required String correoElectronico}) 
-      : _correoElectronicoController = TextEditingController(text: correoElectronico),
+  IniciarSesion({Key? key, required String correoElectronico})
+      : _correoElectronicoController =
+            TextEditingController(text: correoElectronico),
         super(key: key);
 
   // Método para manejar el inicio de sesión
@@ -63,7 +64,7 @@ class IniciarSesion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE3F2FD),
+      backgroundColor: Color(0xFFC0DEF4),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -115,7 +116,8 @@ class IniciarSesion extends StatelessWidget {
                       _login(context);
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
                       padding: MaterialStateProperty.all<EdgeInsets>(
                         const EdgeInsets.symmetric(vertical: 15),
                       ),
