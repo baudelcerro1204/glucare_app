@@ -18,7 +18,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   String _foodIntake = '';
   String _notes = '';
   List<Reminder> _reminders = [];
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   @override
   void initState() {

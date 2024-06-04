@@ -12,15 +12,35 @@ class CrearCuenta extends StatefulWidget {
 
 class _CrearCuentaState extends State<CrearCuenta> {
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _correoElectronicoController =
-      TextEditingController();
+  final TextEditingController _correoElectronicoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _edadController = TextEditingController();
   String _selectedDiabetesType = '1';
 
-  final ApiService apiService = ApiService('http://192.168.0.5:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
+
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _nombreController.addListener(_checkFields);
+    _correoElectronicoController.addListener(_checkFields);
+    _passwordController.addListener(_checkFields);
+    _confirmPasswordController.addListener(_checkFields);
+    _edadController.addListener(_checkFields);
+  }
+
+  void _checkFields() {
+    setState(() {
+      _isButtonDisabled = _nombreController.text.isEmpty ||
+                          _correoElectronicoController.text.isEmpty ||
+                          _passwordController.text.isEmpty ||
+                          _confirmPasswordController.text.isEmpty ||
+                          _edadController.text.isEmpty;
+    });
+  }
 
   void _registerUser() async {
     if (_passwordController.text != _confirmPasswordController.text) {
@@ -46,8 +66,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => IniciarSesion(
-              correoElectronico: _correoElectronicoController.text),
+          builder: (context) => IniciarSesion(correoElectronico: _correoElectronicoController.text),
         ),
       );
     } catch (e) {
@@ -63,7 +82,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
       appBar: const CustomAppBar(), // Utiliza el CustomAppBar
       body: Container(
         padding: const EdgeInsets.all(16.0),
-        color: Colors.lightBlue[50],
+        color: Color(0xFFC0DEF4),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -134,6 +153,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
                   onChanged: (String? newValue) {
                     setState(() {
                       _selectedDiabetesType = newValue!;
+                      _checkFields();
                     });
                   },
                   decoration: const InputDecoration(
@@ -154,7 +174,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
                         const EdgeInsets.symmetric(
                             horizontal: 50, vertical: 15)),
                   ),
-                  onPressed: _registerUser,
+                  onPressed: _isButtonDisabled ? null : _registerUser,
                   child: const Text('Registrarse'),
                 ),
               ],

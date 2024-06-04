@@ -9,7 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       title: Center(
         child: Image.asset(
-          'lib/assets/logo.png',
+          'lib/assets/glucare_removeBG.png',
           height: 2000, // Ajusta el tamaño según sea necesario
         ),
       ),

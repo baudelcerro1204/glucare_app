@@ -7,7 +7,7 @@ class IniciarSesion extends StatelessWidget {
   final TextEditingController _correoElectronicoController;
   final TextEditingController _passwordController = TextEditingController();
 
-  final ApiService apiService = ApiService('http://192.168.0.5:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   IniciarSesion({Key? key, required String correoElectronico})
       : _correoElectronicoController =
@@ -74,8 +74,8 @@ class IniciarSesion extends StatelessWidget {
               children: [
                 const SizedBox(height: 30),
                 Image.asset(
-                  'lib/assets/logo.png',
-                  height: 100, // Ajusta el tamaño según sea necesario
+                  'lib/assets/glucare_removeBG.png',
+                  height: 200, // Ajusta el tamaño según sea necesario
                 ),
                 const SizedBox(height: 30),
                 const CircleAvatar(
