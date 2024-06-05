@@ -136,7 +136,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Editar Recordatorio'),
-          backgroundColor: Color(0xFFE3F2FD),
+          backgroundColor: Color(0xFFC0DEF4),
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -146,11 +146,10 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
           ),
         ),
         body: Container(
-          color: Color(0xFFE3F2FD), // Color de fondo
+          color: Color(0xFFC0DEF4), // Color de fondo
           child: SingleChildScrollView(
             child: Container(
-              color: Color(
-                  0xFFE3F2FD), // Color de fondo para cubrir toda la pantalla
+              color: Color(0xFFC0DEF4), // Color de fondo para cubrir toda la pantalla
               constraints:
                   BoxConstraints(minHeight: MediaQuery.of(context).size.height),
               padding: EdgeInsets.all(16.0),

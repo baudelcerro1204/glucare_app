@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/date_symbol_data_local.dart'; // Importa esto para localización
+import 'package:intl/date_symbol_data_local.dart';
 import 'day_details_screen.dart';
+import 'package:glucare/services/api_service.dart';
+import 'package:glucare/model/Reminder.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -13,16 +15,43 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  Map<DateTime, List<Reminder>> _reminders = {};
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   @override
   void initState() {
     super.initState();
     _inicializarConfiguracionLocal();
+    _fetchReminders();
   }
 
   void _inicializarConfiguracionLocal() {
-    // Inicializa la configuración local para español
     initializeDateFormatting('es_ES', null);
+  }
+
+  Future<void> _fetchReminders() async {
+    try {
+      final reminders = await apiService.getReminders();
+      setState(() {
+        _reminders = _groupRemindersByDate(reminders);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al obtener recordatorios: $e')),
+      );
+    }
+  }
+
+  Map<DateTime, List<Reminder>> _groupRemindersByDate(List<Reminder> reminders) {
+    Map<DateTime, List<Reminder>> groupedReminders = {};
+    for (var reminder in reminders) {
+      final date = DateTime(reminder.date.year, reminder.date.month, reminder.date.day);
+      if (groupedReminders[date] == null) {
+        groupedReminders[date] = [];
+      }
+      groupedReminders[date]!.add(reminder);
+    }
+    return groupedReminders;
   }
 
   @override
@@ -42,8 +71,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white, // Fondo blanco solo para el calendario
-                  borderRadius: BorderRadius.circular(
-                      12.0), // Bordes completamente redondeados
+                  borderRadius: BorderRadius.circular(12.0), // Bordes completamente redondeados
                 ),
                 child: TableCalendar(
                   locale: 'es_ES',
@@ -53,18 +81,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   selectedDayPredicate: (day) {
                     return isSameDay(_selectedDay, day);
                   },
-                  onDaySelected: (selectedDay, focusedDay) {
+                  onDaySelected: (selectedDay, focusedDay) async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DayDetailsScreen(date: selectedDay),
+                      ),
+                    );
+                    if (result == true) {
+                      _fetchReminders();
+                    }
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
                     });
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            DayDetailsScreen(date: selectedDay),
-                      ),
-                    );
                   },
                   calendarFormat: CalendarFormat.month,
                   calendarStyle: CalendarStyle(
@@ -89,7 +119,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     markersMaxCount: 1,
                     markerDecoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: Color(0xFF00D9FF),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -100,10 +130,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       color: Colors.white,
                       fontSize: 20.0,
                     ),
-                    leftChevronIcon:
-                        Icon(Icons.chevron_left, color: Colors.white),
-                    rightChevronIcon:
-                        Icon(Icons.chevron_right, color: Colors.white),
+                    leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
+                    rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
                     headerMargin: EdgeInsets.only(bottom: 8.0),
                     decoration: BoxDecoration(
                       color: Color(0xFF2A629A),
@@ -115,6 +143,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ),
                   daysOfWeekStyle: DaysOfWeekStyle(
                     weekendStyle: TextStyle(color: Colors.red),
+                  ),
+                  eventLoader: (day) {
+                    final dayWithoutTime = DateTime(day.year, day.month, day.day);
+                    final events = _reminders[dayWithoutTime] ?? [];
+                    return events;
+                  },
+                  calendarBuilders: CalendarBuilders(
+                    markerBuilder: (context, day, events) {
+                      if (events.isNotEmpty) {
+                        return Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: 7,
+                            height: 7,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF00D9FF),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        );
+                      }
+                      return SizedBox();
+                    },
                   ),
                 ),
               ),
