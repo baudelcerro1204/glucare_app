@@ -163,14 +163,10 @@ Ante la sospecha de hiperglucemia, lo primero que se debe hacer es medir los niv
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.info_outline,
-                  color: Color(0xFFC0DEF4),
-                  size: 50,
-                ),
+              Image.asset(
+                'lib/assets/glucare_panda_feliz.png',
+                width: 200,
+                height: 200,
               ),
               const SizedBox(height: 20),
               const Text(
