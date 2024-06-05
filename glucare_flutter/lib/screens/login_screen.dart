@@ -3,16 +3,46 @@ import 'package:glucare/main.dart';
 import 'package:glucare/screens/register_screen.dart';
 import 'package:glucare/services/api_service.dart';
 
-class IniciarSesion extends StatelessWidget {
-  final TextEditingController _correoElectronicoController;
-  final TextEditingController _passwordController = TextEditingController();
+class IniciarSesion extends StatefulWidget {
+  final String correoElectronico;
 
+  const IniciarSesion({Key? key, required this.correoElectronico})
+      : super(key: key);
+
+  @override
+  _IniciarSesionState createState() => _IniciarSesionState();
+}
+
+class _IniciarSesionState extends State<IniciarSesion>
+    with SingleTickerProviderStateMixin {
+  late TextEditingController _correoElectronicoController;
+  final TextEditingController _passwordController = TextEditingController();
   final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
-  IniciarSesion({Key? key, required String correoElectronico})
-      : _correoElectronicoController =
-            TextEditingController(text: correoElectronico),
-        super(key: key);
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _correoElectronicoController =
+        TextEditingController(text: widget.correoElectronico);
+
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _animation = Tween<double>(begin: -0.1, end: 0.1).animate(_animationController);
+  }
+
+  @override
+  void dispose() {
+    _correoElectronicoController.dispose();
+    _passwordController.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
 
   // Método para manejar el inicio de sesión
   void _login(BuildContext context) async {
@@ -64,7 +94,7 @@ class IniciarSesion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFC0DEF4),
+      backgroundColor: const Color(0xFFC0DEF4),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -75,17 +105,23 @@ class IniciarSesion extends StatelessWidget {
                 const SizedBox(height: 30),
                 Image.asset(
                   'lib/assets/glucare_removeBG.png',
-                  height: 200, // Ajusta el tamaño según sea necesario
+                  height: 200,   // Ajusta el tamaño según sea necesario
                 ),
                 const SizedBox(height: 30),
-                const CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.tag_faces,
-                    size: 50,
-                    color: Colors.black,
+                AnimatedBuilder(
+                  animation: _animation,
+                  child: Image.asset(
+                    'lib/assets/glucare_panda_saludando.png',
+                    fit: BoxFit.cover,
+                    height: 200, // Ajusta el tamaño según sea necesario
+                    width: 200, // Ajusta el tamaño según sea necesario
                   ),
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: _animation.value,
+                      child: child,
+                    );
+                  },
                 ),
                 const SizedBox(height: 40),
                 TextField(
