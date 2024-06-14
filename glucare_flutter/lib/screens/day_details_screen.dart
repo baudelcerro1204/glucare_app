@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glucare/model/Reminder.dart';
+import 'package:glucare/model/GlucoseMeasurement.dart';
+import 'package:glucare/screens/glucose_input_screen.dart';
 import 'package:glucare/services/api_service.dart';
 
 class DayDetailsScreen extends StatefulWidget {
@@ -13,17 +15,22 @@ class DayDetailsScreen extends StatefulWidget {
 
 class _DayDetailsScreenState extends State<DayDetailsScreen> {
   bool _hadHypoHyper = false;
-  String _insulinDose = '';
   String _physicalActivity = '';
   String _foodIntake = '';
   String _notes = '';
   List<Reminder> _reminders = [];
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
+  List<GlucoseMeasurement> _glucoseMeasurements = [];
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
   @override
   void initState() {
     super.initState();
-    _fetchReminders();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    await _fetchReminders();
+    await _fetchGlucoseMeasurements();
   }
 
   Future<void> _fetchReminders() async {
@@ -35,6 +42,19 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al obtener recordatorios: $e')),
+      );
+    }
+  }
+
+  Future<void> _fetchGlucoseMeasurements() async {
+    try {
+      final glucoseMeasurements = await apiService.getGlucoseMeasurementsByDate(widget.date);
+      setState(() {
+        _glucoseMeasurements = glucoseMeasurements;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al obtener mediciones de glucosa: $e')),
       );
     }
   }
@@ -126,29 +146,35 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  _buildDetailCard('Dosis de insulina aplicada', Icons.edit, (value) {
-                    setState(() {
-                      _insulinDose = value;
-                    });
-                  }),
+                  _buildDetailCard(
+                    'Actividad física realizada',
+                    Icons.fitness_center,
+                    (value) {
+                      setState(() {
+                        _physicalActivity = value;
+                      });
+                    },
+                  ),
                   SizedBox(height: 20),
-                  _buildDetailCard('Actividad física realizada', Icons.fitness_center, (value) {
-                    setState(() {
-                      _physicalActivity = value;
-                    });
-                  }),
+                  _buildDetailCard(
+                    'Alimentos ingeridos',
+                    Icons.restaurant,
+                    (value) {
+                      setState(() {
+                        _foodIntake = value;
+                      });
+                    },
+                  ),
                   SizedBox(height: 20),
-                  _buildDetailCard('Alimentos ingeridos', Icons.restaurant, (value) {
-                    setState(() {
-                      _foodIntake = value;
-                    });
-                  }),
-                  SizedBox(height: 20),
-                  _buildDetailCard('Notas', Icons.note, (value) {
-                    setState(() {
-                      _notes = value;
-                    });
-                  }),
+                  _buildDetailCard(
+                    'Notas',
+                    Icons.note,
+                    (value) {
+                      setState(() {
+                        _notes = value;
+                      });
+                    },
+                  ),
                   SizedBox(height: 20),
                   if (_reminders.isNotEmpty) ...[
                     Text(
@@ -157,6 +183,15 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     ),
                     SizedBox(height: 10),
                     ..._reminders.map((reminder) => _buildReminderCard(reminder)).toList(),
+                    SizedBox(height: 20),
+                  ],
+                  if (_glucoseMeasurements.isNotEmpty) ...[
+                    Text(
+                      'Mediciones de Glucosa:',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    ..._glucoseMeasurements.map((measurement) => _buildGlucoseMeasurementCard(measurement)).toList(),
                     SizedBox(height: 20),
                   ],
                   Center(
@@ -173,6 +208,20 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                         _saveReminder(newReminder);
                       },
                       child: const Text('Guardar'),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GlucoseInputScreen(date: widget.date),
+                          ),
+                        );
+                      },
+                      child: const Text('Registrar nivel de glucosa'),
                     ),
                   ),
                 ],
@@ -215,28 +264,43 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.notifications, color: Colors.blue),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    reminder.title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '${reminder.date.toLocal().toShortString()}, ${reminder.time.format(context)}',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  Text(
-                    reminder.description,
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
+            Text(
+              '${reminder.date.toLocal()}, ${reminder.time.format(context)}',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              reminder.description,
+              style: TextStyle(fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGlucoseMeasurementCard(GlucoseMeasurement measurement) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Fecha: ${measurement.date.toLocal()}',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Hora: ${measurement.time.format(context)}',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Nivel de Glucosa: ${measurement.value}',
+              style: TextStyle(fontSize: 14),
             ),
           ],
         ),

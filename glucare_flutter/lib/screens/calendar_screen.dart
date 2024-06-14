@@ -16,7 +16,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   Map<DateTime, List<Reminder>> _reminders = {};
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
   @override
   void initState() {
@@ -59,11 +59,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendario'),
-        backgroundColor: Color(0xFFC0DEF4),
+        backgroundColor: const Color(0xFFC0DEF4),
         automaticallyImplyLeading: false, // Desactiva la flecha de retroceso
       ),
       body: Container(
-        color: Color(0xFFC0DEF4), // Color de fondo del cuerpo
+        color: const Color(0xFFC0DEF4), // Color de fondo del cuerpo
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -100,7 +100,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   calendarStyle: CalendarStyle(
                     isTodayHighlighted: true,
                     selectedDecoration: BoxDecoration(
-                      color: Color(0xFF2A629A),
+                      color: const Color(0xFF2A629A),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -118,12 +118,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     markersMaxCount: 1,
-                    markerDecoration: BoxDecoration(
+                    markerDecoration: const BoxDecoration(
                       color: Color(0xFF00D9FF),
                       shape: BoxShape.circle,
                     ),
                   ),
-                  headerStyle: HeaderStyle(
+                  headerStyle: const HeaderStyle(
                     titleCentered: true,
                     formatButtonVisible: false,
                     titleTextStyle: TextStyle(
@@ -141,7 +141,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ), // Bordes redondeados solo en la parte superior
                     ),
                   ),
-                  daysOfWeekStyle: DaysOfWeekStyle(
+                  daysOfWeekStyle: const DaysOfWeekStyle(
                     weekendStyle: TextStyle(color: Colors.red),
                   ),
                   eventLoader: (day) {
@@ -157,14 +157,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           child: Container(
                             width: 7,
                             height: 7,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Color(0xFF00D9FF),
                               shape: BoxShape.circle,
                             ),
                           ),
                         );
                       }
-                      return SizedBox();
+                      return const SizedBox();
                     },
                   ),
                 ),

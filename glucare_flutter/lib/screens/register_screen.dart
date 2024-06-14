@@ -18,7 +18,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
   final TextEditingController _edadController = TextEditingController();
   String _selectedDiabetesType = '1';
 
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
   bool _isButtonDisabled = true;
 

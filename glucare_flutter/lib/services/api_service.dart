@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:glucare/model/CommunityPost.dart';
+import 'package:glucare/model/GlucoseMeasurement.dart';
 import 'package:glucare/model/Reminder.dart';
 import 'package:glucare/model/UserDTO.dart';
 import 'package:http/http.dart' as http;
@@ -312,4 +313,122 @@ class ApiService {
       throw Exception('Error al obtener recordatorios: ${response.statusCode} ${response.body}');
     }
   }
+
+    
+    Future<void> saveGlucoseMeasurement(GlucoseMeasurement glucoseMeasurement) async {
+    final token = await _getToken();
+    final userId = await _getUserId();
+
+    if (token == null || userId == null) {
+      throw Exception('Token o user ID no encontrado');
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/glucose/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(glucoseMeasurement.toJson()),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al guardar medición de glucosa: ${response.statusCode}');
+    }
+  }
+
+  Future<List<GlucoseMeasurement>> getGlucoseMeasurements() async {
+    final token = await _getToken();
+    final userId = await _getUserId();
+
+    if (token == null || userId == null) {
+      throw Exception('Token o user ID no encontrado');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/glucose/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      return responseData.map((json) => GlucoseMeasurement.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al obtener mediciones de glucosa: ${response.body}');
+    }
+  }
+
+  Future<void> updateGlucoseMeasurement(int measurementId, GlucoseMeasurement glucoseMeasurement) async {
+    final token = await _getToken();
+
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/glucose/$measurementId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(glucoseMeasurement.toJson()),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al actualizar medición de glucosa: ${response.body}');
+    }
+  }
+
+  Future<void> deleteGlucoseMeasurement(int measurementId) async {
+    final token = await _getToken();
+
+    if (token == null) {
+      throw Exception('Token no encontrado');
+    }
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/glucose/$measurementId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al eliminar medición de glucosa: ${response.body}');
+    }
+  }
+
+  Future<List<GlucoseMeasurement>> getGlucoseMeasurementsByDate(DateTime date) async {
+  final token = await _getToken();
+  final userId = await _getUserId();
+  if (token == null) {
+    throw Exception('Token no encontrado');
+  }
+  if (userId == null) {
+    throw Exception('User ID no encontrado');
+  }
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/glucose/byDate?userId=$userId&date=${date.toIso8601String().split('T')[0]}'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    final List<dynamic> responseData = jsonDecode(response.body);
+    return responseData.map((json) => GlucoseMeasurement.fromJson(json)).toList();
+  } else {
+    throw Exception('Error al obtener mediciones de glucosa: ${response.statusCode} ${response.body}');
+  }
+}
+
 }
