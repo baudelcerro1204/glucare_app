@@ -9,6 +9,7 @@ import 'package:glucare/screens/calendar_screen.dart';
 import 'package:glucare/screens/day_details_screen.dart';
 import 'package:glucare/screens/reminder_list_screen.dart';
 import 'package:glucare/screens/new_reminder_screen.dart';
+import 'package:glucare/screens/home_screen.dart'; // Importa la nueva pantalla
 
 void main() {
   runApp(const MyApp());
@@ -43,6 +44,8 @@ class MyApp extends StatelessWidget {
             const ReminderListScreen(), // Agrega la ruta para la lista de recordatorios
         '/new_reminder': (context) =>
             NewReminderScreen(), // Agrega la ruta para la pantalla de nuevo recordatorio
+        '/home': (context) =>
+            const HomeScreen(), // Agrega la ruta para la pantalla de inicio
       },
     );
   }
@@ -55,13 +58,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: CustomAppBar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: CustomBottomNavigationBar(),
-          ),
-        ],
-      ),
+      body: CustomBottomNavigationBar(), // Cambia el contenido para usar el BottomNavigationBar
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:glucare/model/CommunityPost.dart';
 import 'package:glucare/services/api_service.dart';
 import 'create_post_screen.dart';
-import 'information_screen.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -20,7 +19,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void initState() {
     super.initState();
 
-    apiService = ApiService('http://192.168.0.5:8080'); // Asegúrate de cambiar la URL a la de tu API
+    apiService = ApiService('http://192.168.0.136:8080'); // Asegúrate de cambiar la URL a la de tu API
 
     _fetchPosts();
   }
@@ -46,16 +45,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       appBar: AppBar(
         title: const Text('Comunidad'),
         backgroundColor: const Color(0xFFC0DEF4),
-        leading: IconButton(
-          icon: const Icon(Icons.info_outline),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const InformationScreen()),
-            );
-          },
-        ),
+        automaticallyImplyLeading: false, // Eliminar el botón de regreso por defecto
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
