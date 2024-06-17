@@ -16,7 +16,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   Map<DateTime, List<Reminder>> _reminders = {};
+<<<<<<< HEAD
   final ApiService apiService = ApiService('http://192.168.0.15:8080');
+=======
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
+>>>>>>> 7a7d503b81c4f48578ee4dc0ec72a5547957636b
 
   @override
   void initState() {

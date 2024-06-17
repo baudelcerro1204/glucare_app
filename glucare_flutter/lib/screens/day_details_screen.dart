@@ -23,8 +23,12 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   String _notes = '';
   List<Reminder> _reminders = [];
   List<GlucoseMeasurement> _glucoseMeasurements = [];
+<<<<<<< HEAD
   List<PhysicalActivity> _physicalActivities = []; // Lista para almacenar actividades físicas
   final ApiService apiService = ApiService('http://192.168.0.15:8080');
+=======
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
+>>>>>>> 7a7d503b81c4f48578ee4dc0ec72a5547957636b
 
   @override
   void initState() {

@@ -16,7 +16,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     apiService = ApiService('http://192.168.0.15:8080'); // Asegúrate de cambiar la URL a la de tu API
+=======
+    apiService = ApiService('http://192.168.0.136:8080'); // Asegúrate de cambiar la URL a la de tu API
+>>>>>>> 7a7d503b81c4f48578ee4dc0ec72a5547957636b
   }
 
   Future<void> _publishPost() async {
