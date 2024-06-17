@@ -61,6 +61,9 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<GlucoseMeasurement> glucoseMeasurements;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<PhysicalActivity> physicalActivities;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn

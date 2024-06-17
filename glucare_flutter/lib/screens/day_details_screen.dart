@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:glucare/model/Reminder.dart';
 import 'package:glucare/model/GlucoseMeasurement.dart';
+import 'package:glucare/model/PhysicalActivity.dart'; // Asegúrate de importar el modelo correcto
 import 'package:glucare/screens/glucose_input_screen.dart';
+import 'package:glucare/screens/nutrition_screen.dart';
+import 'package:glucare/screens/physical_activity_screen.dart';
 import 'package:glucare/services/api_service.dart';
 
 class DayDetailsScreen extends StatefulWidget {
@@ -20,7 +23,8 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   String _notes = '';
   List<Reminder> _reminders = [];
   List<GlucoseMeasurement> _glucoseMeasurements = [];
-  final ApiService apiService = ApiService('http://192.168.0.5:8080');
+  List<PhysicalActivity> _physicalActivities = []; // Lista para almacenar actividades físicas
+  final ApiService apiService = ApiService('http://192.168.0.15:8080');
 
   @override
   void initState() {
@@ -31,6 +35,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   Future<void> _fetchData() async {
     await _fetchReminders();
     await _fetchGlucoseMeasurements();
+    await _fetchPhysicalActivities();  // Obtener actividades físicas
   }
 
   Future<void> _fetchReminders() async {
@@ -55,6 +60,19 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al obtener mediciones de glucosa: $e')),
+      );
+    }
+  }
+
+  Future<void> _fetchPhysicalActivities() async {
+    try {
+      final physicalActivities = await apiService.getPhysicalActivitiesByDate(widget.date);
+      setState(() {
+        _physicalActivities = physicalActivities;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al obtener actividades físicas: $e')),
       );
     }
   }
@@ -149,9 +167,16 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                   _buildDetailCard(
                     'Actividad física realizada',
                     Icons.fitness_center,
-                    (value) {
-                      setState(() {
-                        _physicalActivity = value;
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ActividadFisicaScreen(date: widget.date),
+                        ),
+                      ).then((result) {
+                        if (result != null) {
+                          _fetchPhysicalActivities(); // Actualizar actividades físicas
+                        }
                       });
                     },
                   ),
@@ -159,14 +184,23 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                   _buildDetailCard(
                     'Alimentos ingeridos',
                     Icons.restaurant,
-                    (value) {
-                      setState(() {
-                        _foodIntake = value;
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NutritionScreen(),
+                        ),
+                      ).then((result) {
+                        if (result != null) {
+                          setState(() {
+                            _foodIntake = result;
+                          });
+                        }
                       });
                     },
                   ),
                   SizedBox(height: 20),
-                  _buildDetailCard(
+                  _buildTextFieldCard(
                     'Notas',
                     Icons.note,
                     (value) {
@@ -192,6 +226,15 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     ),
                     SizedBox(height: 10),
                     ..._glucoseMeasurements.map((measurement) => _buildGlucoseMeasurementCard(measurement)).toList(),
+                    SizedBox(height: 20),
+                  ],
+                  if (_physicalActivities.isNotEmpty) ...[
+                    Text(
+                      'Actividades Físicas:',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    ..._physicalActivities.map((activity) => _buildPhysicalActivityCard(activity)).toList(),
                     SizedBox(height: 20),
                   ],
                   Center(
@@ -233,7 +276,32 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     );
   }
 
-  Widget _buildDetailCard(String label, IconData icon, Function(String) onChanged) {
+  Widget _buildDetailCard(String label, IconData icon, VoidCallback onTap) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 2,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.blue),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(color: Colors.black54),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFieldCard(String label, IconData icon, Function(String) onChanged) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -307,10 +375,31 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
       ),
     );
   }
-}
 
-extension DateTimeExtension on DateTime {
-  String toShortString() {
-    return '${this.year}-${this.month.toString().padLeft(2, '0')}-${this.day.toString().padLeft(2, '0')}';
+  Widget _buildPhysicalActivityCard(PhysicalActivity activity) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Fecha: ${activity.date.toLocal()}',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Hora: ${activity.time.format(context)}',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Actividad: ${activity.nombre}',
+              style: TextStyle(fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

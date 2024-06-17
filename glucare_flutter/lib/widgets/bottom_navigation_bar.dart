@@ -18,7 +18,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   int _selectedIndex = 2; // Inicializamos con la "Comunidad" seleccionada
 
   static const List<Widget> _widgetOptions = <Widget>[
-    ActividadFisicaScreen(),
     NutritionScreen(), // Nutrición ahora ocupa el lugar de Calendario
     CommunityScreen(), // La comunidad se coloca en el medio
     CalendarScreen(), // Calendario ahora ocupa el lugar de Nutrición

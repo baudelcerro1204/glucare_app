@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:glucare/model/CommunityPost.dart';
 import 'package:glucare/model/GlucoseMeasurement.dart';
+import 'package:glucare/model/PhysicalActivity.dart';
 import 'package:glucare/model/Reminder.dart';
 import 'package:glucare/model/UserDTO.dart';
 import 'package:http/http.dart' as http;
@@ -431,4 +432,54 @@ class ApiService {
   }
 }
 
+Future<void> savePhysicalActivity(PhysicalActivity physicalActivity) async {
+    final token = await _getToken();
+    final userId = await _getUserId();
+
+    if (token == null || userId == null) {
+      throw Exception('Token o user ID no encontrado');
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/activity/$userId'),
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(physicalActivity.toJson()),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al guardar actividad fisica: ${response.statusCode}');
+    }
+  }
+
+  Future<List<PhysicalActivity>> getPhysicalActivitiesByDate(DateTime date) async {
+  final token = await _getToken();
+  final userId = await _getUserId();
+  if (token == null) {
+    throw Exception('Token no encontrado');
+  }
+  if (userId == null) {
+    throw Exception('User ID no encontrado');
+  }
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/activity/byDate?userId=$userId&date=${date.toIso8601String().split('T')[0]}'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    final List<dynamic> responseData = jsonDecode(response.body);
+    return responseData.map((json) => PhysicalActivity.fromJson(json)).toList();
+  } else {
+    throw Exception('Error al obtener actividades fisicas: ${response.statusCode} ${response.body}');
+  }
+}
 }
