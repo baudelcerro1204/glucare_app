@@ -34,9 +34,7 @@ class MyApp extends StatelessWidget {
         '/community': (context) => const CommunityScreen(),
         '/calendar': (context) => const CalendarScreen(),
         '/day_details': (context) =>
-            DayDetailsScreen(date: DateTime.now()), // Placeholder
-        '/nutrition': (context) =>
-            const NutritionScreen(), // Agrega la nueva ruta para la pantalla de nutrición
+            DayDetailsScreen(date: DateTime.now()),
         '/login': (context) => IniciarSesion(
             correoElectronico:
                 ''), // Agrega la ruta para la pantalla de registro

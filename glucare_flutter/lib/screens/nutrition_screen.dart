@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:glucare/services/api_service.dart';
+import 'package:glucare/model/Food.dart'; // Asegúrate de que la ruta y la capitalización sean correctas
 
 class NutritionScreen extends StatefulWidget {
-  const NutritionScreen({Key? key}) : super(key: key);
+  final DateTime date;
+
+  const NutritionScreen({Key? key, required this.date}) : super(key: key);
 
   @override
   _NutritionScreenState createState() => _NutritionScreenState();
 }
 
 class _NutritionScreenState extends State<NutritionScreen> {
-  final ApiService apiService = ApiService('https://api.edamam.com');
+  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService foodService = ApiService('https://api.edamam.com');
   final TextEditingController _searchController = TextEditingController();
   String _searchTerm = '';
   List<Map<String, dynamic>> _foods = [];
@@ -55,7 +59,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
       List<String> randomSuggestions =
           (_suggestions..shuffle()).take(5).toList();
       for (String suggestion in randomSuggestions) {
-        final foodData = await apiService.searchFood(suggestion);
+        final foodData = await foodService.searchFood(suggestion);
         final List<Map<String, dynamic>> foods = (foodData['hints'] as List)
             .map((item) => item['food'] as Map<String, dynamic>)
             .toList();
@@ -83,7 +87,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
     });
 
     try {
-      final foodData = await apiService.searchFood(query);
+      final foodData = await foodService.searchFood(query);
       final List<Map<String, dynamic>> foods = (foodData['hints'] as List)
           .map((item) => item['food'] as Map<String, dynamic>)
           .toList();
@@ -114,7 +118,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
           .toList();
 
       for (String food in foodsToSearch) {
-        final foodData = await apiService.searchFood(food);
+        final foodData = await foodService.searchFood(food);
         final List<Map<String, dynamic>> foods = (foodData['hints'] as List)
             .map((item) => item['food'] as Map<String, dynamic>)
             .toList();
@@ -131,6 +135,28 @@ class _NutritionScreenState extends State<NutritionScreen> {
         _errorMessage = 'Error: ${e.toString()}';
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _saveFood(Map<String, dynamic> foodData) async {
+    try {
+      final food = Food(
+        nombre: foodData['label'],
+        calorias: foodData['nutrients']['ENERC_KCAL'].toString(),
+        proteinas: foodData['nutrients']['PROCNT'].toString(),
+        grasas: foodData['nutrients']['FAT'].toString(),
+        carbohidratos: foodData['nutrients']['CHOCDF'].toString(),
+        date: widget.date,
+        time: TimeOfDay.now(),
+      );
+
+      await apiService.saveFood(food);
+      Navigator.pop(context, true); // Return true to indicate a successful save
+    } catch (e) {
+      print('Error al guardar comida: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al guardar comida: $e')),
+      );
     }
   }
 
@@ -465,6 +491,15 @@ class _NutritionScreenState extends State<NutritionScreen> {
                                                               context),
                                                       child:
                                                           const Text('Cerrar'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        _saveFood(food); // Save the food
+                                                        Navigator.pop(
+                                                            context);
+                                                      },
+                                                      child: const Text(
+                                                          'Guardar'),
                                                     ),
                                                   ],
                                                 ),

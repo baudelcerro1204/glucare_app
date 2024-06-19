@@ -65,6 +65,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<PhysicalActivity> physicalActivities;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Food> foods;
+
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private VirtualPet mascotaVirtual;

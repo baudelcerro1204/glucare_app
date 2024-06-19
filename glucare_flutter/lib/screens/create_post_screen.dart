@@ -16,11 +16,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   void initState() {
     super.initState();
-<<<<<<< HEAD
     apiService = ApiService('http://192.168.0.15:8080'); // Asegúrate de cambiar la URL a la de tu API
-=======
-    apiService = ApiService('http://192.168.0.136:8080'); // Asegúrate de cambiar la URL a la de tu API
->>>>>>> 7a7d503b81c4f48578ee4dc0ec72a5547957636b
   }
 
   Future<void> _publishPost() async {
@@ -41,8 +37,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         userName: '', // Este valor será asignado por el backend
       );
       await apiService.createPost(newPost);
-      Navigator.pop(context,
-          true); // Regresa a la pantalla anterior e indica que se publicó un post
+      Navigator.pop(context, true); // Regresa a la pantalla anterior e indica que se publicó un post
     } catch (e) {
       // Manejar errores
       print(e);
@@ -57,8 +52,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Crear Publicación'),
-        backgroundColor:
-            Color(0xFFC0DEF4), // Cambia el color de la AppBar si es necesario
+        backgroundColor: Color(0xFFC0DEF4), // Cambia el color de la AppBar si es necesario
       ),
       body: Container(
         color: Color(0xFFC0DEF4), // Fondo azul claro
@@ -67,7 +61,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Aquí eliminamos la fila que contenía la imagen y el nombre del usuario.
               SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(

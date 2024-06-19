@@ -20,15 +20,9 @@ class _CustomBottomNavigationBarState
   int _selectedIndex = 2; // Inicializamos con la "Home" seleccionada en el medio
 
   static const List<Widget> _widgetOptions = <Widget>[
-<<<<<<< HEAD
-    NutritionScreen(), // Nutrición ahora ocupa el lugar de Calendario
-    CommunityScreen(), // La comunidad se coloca en el medio
-    CalendarScreen(), // Calendario ahora ocupa el lugar de Nutrición
-=======
     CommunityScreen(),
     CalendarScreen(),
     HomeScreen(), // Home en el medio
->>>>>>> 7a7d503b81c4f48578ee4dc0ec72a5547957636b
     ReminderListScreen(),
     ProfileScreen(),
   ];

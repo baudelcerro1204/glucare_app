@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:glucare/model/Reminder.dart';
 import 'package:glucare/model/GlucoseMeasurement.dart';
-import 'package:glucare/model/PhysicalActivity.dart'; // Asegúrate de importar el modelo correcto
+import 'package:glucare/model/PhysicalActivity.dart';
+import 'package:glucare/model/Food.dart'; // Asegúrate de importar el modelo correcto
 import 'package:glucare/screens/glucose_input_screen.dart';
 import 'package:glucare/screens/nutrition_screen.dart';
 import 'package:glucare/screens/physical_activity_screen.dart';
@@ -23,12 +24,9 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   String _notes = '';
   List<Reminder> _reminders = [];
   List<GlucoseMeasurement> _glucoseMeasurements = [];
-<<<<<<< HEAD
-  List<PhysicalActivity> _physicalActivities = []; // Lista para almacenar actividades físicas
+  List<PhysicalActivity> _physicalActivities = [];
+  List<Food> _foods = []; // Lista para almacenar comidas
   final ApiService apiService = ApiService('http://192.168.0.15:8080');
-=======
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
->>>>>>> 7a7d503b81c4f48578ee4dc0ec72a5547957636b
 
   @override
   void initState() {
@@ -39,7 +37,8 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   Future<void> _fetchData() async {
     await _fetchReminders();
     await _fetchGlucoseMeasurements();
-    await _fetchPhysicalActivities();  // Obtener actividades físicas
+    await _fetchPhysicalActivities();
+    await _fetchFoods(); // Obtener comidas
   }
 
   Future<void> _fetchReminders() async {
@@ -77,6 +76,19 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al obtener actividades físicas: $e')),
+      );
+    }
+  }
+
+  Future<void> _fetchFoods() async {
+    try {
+      final foods = await apiService.getFoodsByDate(widget.date);
+      setState(() {
+        _foods = foods;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al obtener comidas: $e')),
       );
     }
   }
@@ -192,13 +204,11 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NutritionScreen(),
+                          builder: (context) => NutritionScreen(date: widget.date),
                         ),
                       ).then((result) {
                         if (result != null) {
-                          setState(() {
-                            _foodIntake = result;
-                          });
+                          _fetchFoods(); // Actualizar comidas
                         }
                       });
                     },
@@ -239,6 +249,15 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     ),
                     SizedBox(height: 10),
                     ..._physicalActivities.map((activity) => _buildPhysicalActivityCard(activity)).toList(),
+                    SizedBox(height: 20),
+                  ],
+                  if (_foods.isNotEmpty) ...[
+                    Text(
+                      'Comidas Ingeridas:',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    ..._foods.map((food) => _buildFoodCard(food)).toList(),
                     SizedBox(height: 20),
                   ],
                   Center(
@@ -399,6 +418,45 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
             ),
             Text(
               'Actividad: ${activity.nombre}',
+              style: TextStyle(fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFoodCard(Food food) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hora: ${food.time.format(context)}',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Nombre: ${food.nombre}',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Calorías: ${food.calorias} kcal',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Proteínas: ${food.proteinas} g',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Grasas: ${food.grasas} g',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Carbohidratos: ${food.carbohidratos} g',
               style: TextStyle(fontSize: 14),
             ),
           ],

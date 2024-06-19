@@ -24,11 +24,9 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
 
   late TextEditingController _otherTagController;
 
-<<<<<<< HEAD
+
   final ApiService apiService = ApiService('http://192.168.0.15:8080');
-=======
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
->>>>>>> 7a7d503b81c4f48578ee4dc0ec72a5547957636b
+
 
   final List<Map<String, dynamic>> _tags = [
     {'label': 'Mediciones de Azucar', 'color': Colors.blue},

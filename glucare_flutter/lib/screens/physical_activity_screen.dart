@@ -3,6 +3,7 @@ import 'package:glucare/model/PhysicalActivity.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:glucare/services/api_service.dart'; // Importa tu ApiService
+import 'package:translator/translator.dart'; // Importa el traductor
 
 class ActividadFisicaScreen extends StatefulWidget {
   final DateTime date;
@@ -19,6 +20,7 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
   String _searchQuery = '';
   bool _isLoading = false;
   final ApiService apiService = ApiService('http://192.168.0.15:8080'); // Instancia de ApiService
+  final translator = GoogleTranslator(); // Instancia del traductor
 
   @override
   void initState() {
@@ -61,8 +63,19 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
       );
 
       if (response.statusCode == 200) {
+        List exercises = json.decode(response.body);
+        List translatedExercises = [];
+        
+        for (var exercise in exercises) {
+          var translatedInstructions = await translator.translate(exercise['instructions'], from: 'en', to: 'es');
+          translatedExercises.add({
+            'name': exercise['name'],
+            'instructions': translatedInstructions.text,
+          });
+        }
+
         setState(() {
-          _exercises = json.decode(response.body);
+          _exercises = translatedExercises;
         });
       } else {
         throw Exception('Failed to load exercises');

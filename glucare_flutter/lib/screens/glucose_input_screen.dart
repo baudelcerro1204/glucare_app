@@ -14,11 +14,9 @@ class GlucoseInputScreen extends StatefulWidget {
 class _GlucoseInputScreenState extends State<GlucoseInputScreen> {
   String _glucoseLevel = '';
   TimeOfDay _selectedTime = TimeOfDay.now();
-<<<<<<< HEAD
+
   final ApiService apiService = ApiService('http://192.168.0.15:8080');
-=======
-  final ApiService apiService = ApiService('http://192.168.0.136:8080');
->>>>>>> 7a7d503b81c4f48578ee4dc0ec72a5547957636b
+
 
   @override
   Widget build(BuildContext context) {

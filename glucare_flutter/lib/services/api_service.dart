@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:glucare/model/CommunityPost.dart';
+import 'package:glucare/model/Food.dart';
 import 'package:glucare/model/GlucoseMeasurement.dart';
 import 'package:glucare/model/PhysicalActivity.dart';
 import 'package:glucare/model/Reminder.dart';
@@ -482,4 +483,59 @@ Future<void> savePhysicalActivity(PhysicalActivity physicalActivity) async {
     throw Exception('Error al obtener actividades fisicas: ${response.statusCode} ${response.body}');
   }
 }
+
+Future<void> saveFood(Food food) async {
+  final token = await _getToken();
+  final userId = await _getUserId();
+
+  if (token == null || userId == null) {
+    throw Exception('Token o user ID no encontrado');
+  }
+
+  final response = await http.post(
+    Uri.parse('$baseUrl/food/$userId'),
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',  // Asegúrate de que el token esté presente
+    },
+    body: jsonEncode(food.toJson()),  // Asegúrate de que el body sea correcto
+  );
+
+  if (response.statusCode != 200) {
+    print('Error al guardar comida: ${response.statusCode} ${response.body}');
+    throw Exception('Error al guardar comida: ${response.statusCode}');
+  }
+}
+
+
+  Future<List<Food>> getFoodsByDate(DateTime date) async {
+  final token = await _getToken();
+  final userId = await _getUserId();
+  if (token == null) {
+    throw Exception('Token no encontrado');
+  }
+  if (userId == null) {
+    throw Exception('User ID no encontrado');
+  }
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/food/byDate?userId=$userId&date=${date.toIso8601String().split('T')[0]}'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    final List<dynamic> responseData = jsonDecode(response.body);
+    return responseData.map((json) => Food.fromJson(json)).toList();
+  } else {
+    throw Exception('Error al obtener comidas: ${response.statusCode} ${response.body}');
+  }
+}
+
+
 }

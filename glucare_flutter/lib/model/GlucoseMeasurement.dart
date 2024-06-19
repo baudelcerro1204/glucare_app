@@ -14,13 +14,14 @@ class GlucoseMeasurement {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'date': date.toIso8601String().split('T')[0],
-      'time': '${time.hour}:${time.minute.toString().padLeft(2, '0')}',
-      'userId': userId,
-    };
-  }
+  return {
+    'value': value,
+    'date': date.toIso8601String().split('T')[0],
+    'time': '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}',
+    'userId': userId,
+  };
+}
+
 
   factory GlucoseMeasurement.fromJson(Map<String, dynamic> json) {
     return GlucoseMeasurement(
