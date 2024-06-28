@@ -12,7 +12,7 @@ class NutritionScreen extends StatefulWidget {
 }
 
 class _NutritionScreenState extends State<NutritionScreen> {
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
   final ApiService foodService = ApiService('https://api.edamam.com');
   final TextEditingController _searchController = TextEditingController();
   String _searchTerm = '';

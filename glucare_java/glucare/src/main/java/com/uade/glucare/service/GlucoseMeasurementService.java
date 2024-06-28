@@ -2,11 +2,14 @@ package com.uade.glucare.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.uade.glucare.dto.GlucoseMeasurementDTO;
 import com.uade.glucare.model.GlucoseMeasurement;
 import com.uade.glucare.model.User;
 import com.uade.glucare.repository.userRepository;
@@ -49,4 +52,17 @@ public class GlucoseMeasurementService {
     public void deleteGlucoseMeasurement(Long measurementId) {
         glucoseMeasurementRepository.deleteById(measurementId);
     }
+
+    public List<GlucoseMeasurementRepository.DailyAverage> getDailyAverages(Long userId) {
+        return glucoseMeasurementRepository.findDailyAveragesByUserId(userId);
+    }
+
+    public List<GlucoseMeasurementRepository.WeeklyAverage> getWeeklyAverages(Long userId) {
+        return glucoseMeasurementRepository.findWeeklyAveragesByUserId(userId);
+    }
+
+    public List<GlucoseMeasurementRepository.MonthlyAverage> getMonthlyAverages(Long userId) {
+        return glucoseMeasurementRepository.findMonthlyAveragesByUserId(userId);
+    }
+
 }

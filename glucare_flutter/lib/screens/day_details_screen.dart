@@ -26,7 +26,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   List<GlucoseMeasurement> _glucoseMeasurements = [];
   List<PhysicalActivity> _physicalActivities = [];
   List<Food> _foods = []; // Lista para almacenar comidas
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.5:8080');
 
   @override
   void initState() {

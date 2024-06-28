@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="63d41848-437a-4a37-8bac-e544a0984c60" name="Changes" comment="" />
+    <list default="true" id="63d41848-437a-4a37-8bac-e544a0984c60" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/calendar_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/calendar_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/comunity_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/comunity_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/create_post_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/create_post_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/day_details_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/day_details_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/edit_reminder_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/edit_reminder_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/glucose_input_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/glucose_input_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/login_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/new_reminder_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/new_reminder_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/nutrition_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/nutrition_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/physical_activity_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/physical_activity_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/register_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/register_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/screens/reminder_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/screens/reminder_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/lib/services/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../glucare_flutter/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../glucare_flutter/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/glucare/src/main/java/com/uade/glucare/controller/demo/GlucoseMeasurementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/glucare/src/main/java/com/uade/glucare/controller/demo/GlucoseMeasurementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/glucare/src/main/java/com/uade/glucare/repository/GlucoseMeasurementRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/glucare/src/main/java/com/uade/glucare/repository/GlucoseMeasurementRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/glucare/src/main/java/com/uade/glucare/service/GlucoseMeasurementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/glucare/src/main/java/com/uade/glucare/service/GlucoseMeasurementService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/glucare/src/main/java/com/uade/glucare/service/dao/GlucoseMeasurementDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/glucare/src/main/java/com/uade/glucare/service/dao/GlucoseMeasurementDAO.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2gVMhXlCmdbMcqTv6Lktp5nX7aH" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -23,7 +49,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/ProyectoSIP",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/UADE/glucare_app/glucare_java",
     "ruby.rails.projectView.checked": "true",
     "vue.rearranger.settings.migration": "true"
   },
@@ -42,6 +69,7 @@
       <option name="presentableId" value="Default" />
       <updated>1715778411211</updated>
       <workItem from="1715778412222" duration="94000" />
+      <workItem from="1719609641503" duration="31000" />
     </task>
     <servers />
   </component>

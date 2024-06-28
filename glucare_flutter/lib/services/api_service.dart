@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:glucare/model/CommunityPost.dart';
 import 'package:glucare/model/Food.dart';
 import 'package:glucare/model/GlucoseMeasurement.dart';
+import 'package:glucare/model/MonthlyAverage.dart';
 import 'package:glucare/model/PhysicalActivity.dart';
 import 'package:glucare/model/Reminder.dart';
 import 'package:glucare/model/UserDTO.dart';
+import 'package:glucare/model/WeeklyAverage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -537,5 +539,105 @@ Future<void> saveFood(Food food) async {
   }
 }
 
+ Future<Map<String, double>> getDailyAverageGlucose() async {
+    final token = await _getToken();
+    final userId = await _getUserId();
 
+    if (token == null || userId == null) {
+      throw Exception('Token o user ID no encontrado');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/glucose/daily-average/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      return Map.fromIterable(responseData,
+          key: (e) => e['date'] as String,
+          value: (e) => e['averageValue'] as double);
+    } else {
+      throw Exception('Error al obtener el promedio diario de glucosa: ${response.statusCode}');
+    }
+  }
+
+   Future<Map<String, WeeklyAverage>> getWeeklyAverageGlucose() async {
+    final token = await _getToken();
+    final userId = await _getUserId();
+
+    if (token == null || userId == null) {
+      throw Exception('Token o user ID no encontrado');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/glucose/weekly-average/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      return Map.fromIterable(responseData,
+          key: (e) => 'Semana ${e['week']} de ${e['year']}',
+          value: (e) => WeeklyAverage.fromJson(e));
+    } else {
+      throw Exception('Error al obtener el promedio semanal de glucosa: ${response.statusCode}');
+    }
+  }
+
+  Future<Map<String, MonthlyAverage>> getMonthlyAverageGlucose() async {
+    final token = await _getToken();
+    final userId = await _getUserId();
+
+    if (token == null || userId == null) {
+      throw Exception('Token o user ID no encontrado');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/glucose/monthly-average/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      return Map.fromIterable(responseData,
+          key: (e) => '${e['month']}/${e['year']}',
+          value: (e) => MonthlyAverage.fromJson(e));
+    } else {
+      throw Exception('Error al obtener el promedio mensual de glucosa: ${response.statusCode}');
+    }
+  }
+
+   Future<List<GlucoseMeasurement>> getGlucoseHistory() async {
+    final token = await _getToken();
+    final userId = await _getUserId();
+
+    if (token == null || userId == null) {
+      throw Exception('Token o user ID no encontrado');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/glucose/history/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      return responseData.map((json) => GlucoseMeasurement.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al obtener el historial de glucosa: ${response.statusCode}');
+    }
+  }
 }

@@ -2,6 +2,7 @@ package com.uade.glucare.controller.demo;
 
 import com.uade.glucare.dto.GlucoseMeasurementDTO;
 import com.uade.glucare.model.GlucoseMeasurement;
+import com.uade.glucare.repository.GlucoseMeasurementRepository;
 import com.uade.glucare.service.GlucoseMeasurementService;
 import com.uade.glucare.service.dao.GlucoseMeasurementDAO;
 import com.uade.glucare.service.dao.ReminderDAO;
@@ -50,4 +51,25 @@ public class GlucoseMeasurementController {
     public void deleteGlucoseMeasurement(@PathVariable Long measurementId) {
         glucoseMeasurementService.deleteGlucoseMeasurement(measurementId);
     }
+
+    @GetMapping("/daily-average/{userId}")
+    public List<GlucoseMeasurementRepository.DailyAverage> getDailyAverages(@PathVariable Long userId) {
+        return glucoseMeasurementService.getDailyAverages(userId);
+    }
+
+    @GetMapping("/weekly-average/{userId}")
+    public List<GlucoseMeasurementRepository.WeeklyAverage> getWeeklyAverages(@PathVariable Long userId) {
+        return glucoseMeasurementService.getWeeklyAverages(userId);
+    }
+
+    @GetMapping("/monthly-average/{userId}")
+    public List<GlucoseMeasurementRepository.MonthlyAverage> getMonthlyAverages(@PathVariable Long userId) {
+        return glucoseMeasurementService.getMonthlyAverages(userId);
+    }
+
+    @GetMapping("/history/{userId}")
+    public List<GlucoseMeasurementDTO> getAllMeasurements(@PathVariable Long userId) {
+        return glucoseMeasurementDAO.getAllMeasurements(userId);
+    }
+
 }

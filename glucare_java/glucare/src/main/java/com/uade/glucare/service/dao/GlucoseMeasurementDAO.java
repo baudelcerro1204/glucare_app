@@ -26,6 +26,12 @@ public class GlucoseMeasurementDAO {
 
     }
 
+    @Transactional(readOnly = true)
+    public List<GlucoseMeasurementDTO> getAllMeasurements(Long userId) {
+        List<GlucoseMeasurement> measurements = glucoseMeasurementRepository.findAllByUserIdOrderByDateTime(userId);
+        return measurements.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
     private GlucoseMeasurementDTO convertToDTO(GlucoseMeasurement glucoseMeasurement) {
         GlucoseMeasurementDTO dto = new GlucoseMeasurementDTO();
         dto.setId(glucoseMeasurement.getId());
