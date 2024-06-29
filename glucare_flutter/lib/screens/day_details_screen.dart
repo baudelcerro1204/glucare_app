@@ -18,15 +18,13 @@ class DayDetailsScreen extends StatefulWidget {
 }
 
 class _DayDetailsScreenState extends State<DayDetailsScreen> {
-  bool _hadHypoHyper = false;
   String _physicalActivity = '';
   String _foodIntake = '';
-  String _notes = '';
   List<Reminder> _reminders = [];
   List<GlucoseMeasurement> _glucoseMeasurements = [];
   List<PhysicalActivity> _physicalActivities = [];
   List<Food> _foods = []; // Lista para almacenar comidas
-  final ApiService apiService = ApiService('http://192.168.0.5:8080');
+  final ApiService apiService = ApiService('http://192.168.0.15:8080');
 
   @override
   void initState() {
@@ -93,20 +91,6 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     }
   }
 
-  Future<void> _saveReminder(Reminder reminder) async {
-    try {
-      await apiService.saveReminder(reminder);
-      setState(() {
-        _reminders.add(reminder);
-      });
-      Navigator.pop(context, true); // Regresar y actualizar calendario
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al guardar recordatorio: $e')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,44 +123,6 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                         ),
                       ),
                       SizedBox(width: 48), // Espacio para equilibrar el diseño
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Episodios de hipoglucemia o hiperglucemia:',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _hadHypoHyper = true;
-                          });
-                        },
-                        child: Text('SI'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _hadHypoHyper ? Colors.blue : Colors.white,
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(20),
-                        ),
-                      ),
-                      SizedBox(width: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _hadHypoHyper = false;
-                          });
-                        },
-                        child: Text('NO'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: !_hadHypoHyper ? Colors.blue : Colors.white,
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(20),
-                        ),
-                      ),
                     ],
                   ),
                   SizedBox(height: 20),
@@ -214,23 +160,18 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     },
                   ),
                   SizedBox(height: 20),
-                  _buildTextFieldCard(
-                    'Notas',
-                    Icons.note,
-                    (value) {
-                      setState(() {
-                        _notes = value;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
                   if (_reminders.isNotEmpty) ...[
                     Text(
                       'Recordatorios:',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
-                    ..._reminders.map((reminder) => _buildReminderCard(reminder)).toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _reminders.map((reminder) => _buildReminderCard(reminder)).toList(),
+                      ),
+                    ),
                     SizedBox(height: 20),
                   ],
                   if (_glucoseMeasurements.isNotEmpty) ...[
@@ -239,7 +180,12 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
-                    ..._glucoseMeasurements.map((measurement) => _buildGlucoseMeasurementCard(measurement)).toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _glucoseMeasurements.map((measurement) => _buildGlucoseMeasurementCard(measurement)).toList(),
+                      ),
+                    ),
                     SizedBox(height: 20),
                   ],
                   if (_physicalActivities.isNotEmpty) ...[
@@ -248,7 +194,12 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
-                    ..._physicalActivities.map((activity) => _buildPhysicalActivityCard(activity)).toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _physicalActivities.map((activity) => _buildPhysicalActivityCard(activity)).toList(),
+                      ),
+                    ),
                     SizedBox(height: 20),
                   ],
                   if (_foods.isNotEmpty) ...[
@@ -257,26 +208,14 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
-                    ..._foods.map((food) => _buildFoodCard(food)).toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _foods.map((food) => _buildFoodCard(food)).toList(),
+                      ),
+                    ),
                     SizedBox(height: 20),
                   ],
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final newReminder = Reminder(
-                          title: 'Nuevo recordatorio',
-                          description: 'Descripción del recordatorio',
-                          date: widget.date,
-                          time: TimeOfDay.now(),
-                          repeatDays: [false, false, false, false, false, false, false],
-                          etiqueta: 'General',
-                        );
-                        _saveReminder(newReminder);
-                      },
-                      child: const Text('Guardar'),
-                    ),
-                  ),
-                  SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
@@ -287,7 +226,12 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                           ),
                         );
                       },
-                      child: const Text('Registrar nivel de glucosa'),
+                      child: const Text(
+                        'Registrar nivel de glucosa',
+                        style: TextStyle(
+                          color: Color(0xFF0D99FF),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -353,6 +297,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado horizontal
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -376,6 +321,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado horizontal
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -403,6 +349,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado horizontal
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -430,6 +377,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado horizontal
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(

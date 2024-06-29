@@ -1,6 +1,7 @@
 package com.uade.glucare.service;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.uade.glucare.repository.ReminderRepository;
+import com.uade.glucare.dto.GlucoseMeasurementDTO;
+import com.uade.glucare.model.GlucoseMeasurement;
 import com.uade.glucare.model.Reminder;
 import com.uade.glucare.repository.userRepository;
+import com.uade.glucare.service.dao.GlucoseMeasurementDAO;
 
 import jakarta.transaction.Transactional;
 
@@ -83,5 +87,17 @@ public class reminderService {
         // Devuelve la lista de recordatorios del usuario
         return authenticatedUser.getRecordatorios();
     }
+
+    @Autowired
+    private GlucoseMeasurementDAO glucoseMeasurementDAO;
+
+    public boolean checkUserAchievements(Long userId) {
+        // Obtener las mediciones de glucosa del usuario para hoy
+        List<GlucoseMeasurementDTO> glucoseMeasurements = glucoseMeasurementDAO.findAllByUserIdAndDate(userId, LocalDate.now());
+
+        // Verificar si hay al menos una medición de glucosa registrada hoy
+        return !glucoseMeasurements.isEmpty();
+    }
+
     
 }

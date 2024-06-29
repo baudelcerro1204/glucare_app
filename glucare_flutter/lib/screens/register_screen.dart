@@ -19,7 +19,7 @@ class _CrearCuentaState extends State<CrearCuenta> {
   String _selectedDiabetesType = '1';
 
 
-  final ApiService apiService = ApiService('http://192.168.0.5:8080');
+  final ApiService apiService = ApiService('http://192.168.0.15:8080');
   bool _isButtonDisabled = true;
 
   @override
@@ -79,7 +79,11 @@ class _CrearCuentaState extends State<CrearCuenta> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(), // Utiliza el CustomAppBar
+      appBar: AppBar(
+        title: const Text('Crear Cuenta'),
+        backgroundColor: Color(0xFFC0DEF4),
+        automaticallyImplyLeading: true, // Habilita la flecha de retroceso
+      ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         color: Color(0xFFC0DEF4),

@@ -14,9 +14,7 @@ class ReminderListScreen extends StatefulWidget {
 class _ReminderListScreenState extends State<ReminderListScreen> {
   List<Reminder> _reminders = [];
 
-
-  final ApiService apiService = ApiService('http://192.168.0.5:8080');
-
+  final ApiService apiService = ApiService('http://192.168.0.15:8080');
 
   @override
   void initState() {
@@ -72,7 +70,7 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Recordatorios',
+                  'Recordatorios',                 
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -108,7 +106,7 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
                       ),
                       title: Text(reminder.title),
                       subtitle: Text(
-                        '${reminder.date}, ${reminder.time}\n${reminder.description}',
+                        '${reminder.date.toLocal().toString().split(' ')[0]}, ${reminder.time.format(context)}\n${reminder.description}',
                       ),
                       onTap: () {
                         _editReminder(context, reminder);

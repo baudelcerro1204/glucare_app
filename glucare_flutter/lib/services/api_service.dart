@@ -640,4 +640,98 @@ Future<void> saveFood(Food food) async {
       throw Exception('Error al obtener el historial de glucosa: ${response.statusCode}');
     }
   }
+
+  Future<bool> checkUserAchievements(int userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/reminders/check-achievements/$userId'));
+    if (response.statusCode == 200) {
+      return response.body == 'true';
+    } else {
+      print('Failed to check user achievements: ${response.body}');
+      throw Exception('Failed to check user achievements');
+    }
+  }
+
+  Future<String> getLoginMessage(int userId) async {
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('jwt_token');
+
+  if (token == null) {
+    throw Exception('Token no encontrado');
+  }
+
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/reminders/login-message/$userId'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return response.body;
+  } else {
+    throw Exception('Failed to load login message');
+  }
+}
+
+
+  Future<String> getMotivationalMessage(int userId) async {
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('jwt_token');
+
+  if (token == null) {
+    throw Exception('Token no encontrado');
+  }
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/reminders/motivational-message/$userId'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return response.body;
+  } else {
+    throw Exception('Failed to load motivational message');
+  }
+}
+
+
+  Future<String> getUserAchievements(int userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/reminders/achievements/$userId'));
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to load achievements');
+    }
+  }
+
+  Future<bool> hasGlucoseMeasurementsToday(int userId) async {
+  final token = await _getToken();
+  final date = DateTime.now().toIso8601String().split('T')[0];
+
+  if (token == null) {
+    throw Exception('Token no encontrado');
+  }
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/glucose/byDate?userId=$userId&date=$date'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final List<dynamic> responseData = jsonDecode(response.body);
+    return responseData.isNotEmpty;
+  } else {
+    throw Exception('Error al verificar mediciones de glucosa: ${response.body}');
+  }
+}
+
+
 }

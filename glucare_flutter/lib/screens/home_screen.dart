@@ -5,6 +5,7 @@ import 'package:glucare/model/MonthlyAverage.dart';
 import 'package:glucare/model/WeeklyAverage.dart';
 import 'package:glucare/screens/information_screen.dart';
 import 'package:glucare/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:collection';
 
@@ -16,40 +17,44 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<String> _messages = [
-    '¡Hola! user_id, ¿cómo te encuentras hoy?',
-    'Recuerda beber agua y mantenerte hidratado.',
-    '¡Vamos a hacer algo de ejercicio hoy!',
-    '¡Eres increíble, sigue así!',
-    'No olvides comer tus frutas y verduras.',
-  ];
+  final List<String> _messages = [];
   int _currentMessageIndex = 0;
-  late Timer _timer;
   Map<String, double> _dailyAverages = {};
   Map<String, WeeklyAverage> _weeklyAverages = {};
   Map<String, MonthlyAverage> _monthlyAverages = {};
   List<GlucoseMeasurement> _glucoseHistory = [];
   Map<DateTime, double> _dailyAverageMap = {};
+  bool _showWelcomeMessage = true;
+  String _welcomeMessage = '';
+  bool _hasGlucoseMeasurementsToday = false;
 
   @override
   void initState() {
     super.initState();
-    _startMessageRotation();
+    _loadUserData();
     _fetchDailyAverages();
     _fetchWeeklyAverages();
     _fetchMonthlyAverages();
     _fetchGlucoseHistory();
+    _checkGlucoseMeasurements();
   }
 
-  void _startMessageRotation() {
-    _timer = Timer.periodic(Duration(minutes: 1), (Timer timer) {
-      setState(() {
-        _currentMessageIndex = (_currentMessageIndex + 1) % _messages.length;
-      });
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userName = prefs.getString('user_name') ?? 'Usuario';
+    final firstLogin = prefs.getBool('first_login') ?? true;
+
+    setState(() {
+      if (firstLogin) {
+        _welcomeMessage = '¡Hola $userName! Qué bueno verte de nuevo.';
+        prefs.setBool('first_login', false);
+      } else {
+        _showWelcomeMessage = false;
+      }
     });
   }
 
-  final apiService = ApiService('http://192.168.0.5:8080');
+  final apiService = ApiService('http://192.168.0.15:8080');
 
   Future<void> _fetchDailyAverages() async {
     try {
@@ -85,12 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
   Future<void> _fetchGlucoseHistory() async {
     try {
       final history = await apiService.getGlucoseHistory();
@@ -100,6 +99,49 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } catch (e) {
       print('Error al obtener el historial de glucosa: $e');
+    }
+  }
+
+  Future<void> _checkGlucoseMeasurements() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('user_id');
+
+      if (userId == null) {
+        print('User ID not found');
+        return;
+      }
+
+      final measurements = await apiService.getGlucoseMeasurementsByDate(DateTime.now());
+      setState(() {
+        _hasGlucoseMeasurementsToday = measurements.isNotEmpty;
+        if (_hasGlucoseMeasurementsToday) {
+          _fetchMotivationalMessage();
+        } else {
+          _messages.add('No cargaste mediciones de glucosa hoy.');
+        }
+      });
+    } catch (e) {
+      print('Error al verificar las mediciones de glucosa: $e');
+    }
+  }
+
+  Future<void> _fetchMotivationalMessage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('user_id');
+
+      if (userId == null) {
+        print('User ID not found');
+        return;
+      }
+
+      final message = await apiService.getMotivationalMessage(userId);
+      setState(() {
+        _messages.add(message);
+      });
+    } catch (e) {
+      print('Error al obtener mensaje motivacional: $e');
     }
   }
 
@@ -125,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFC0DEF4),
+      backgroundColor: const Color(0xFFC0DEF4),
       appBar: AppBar(
         backgroundColor: const Color(0xFFC0DEF4),
         leading: IconButton(
@@ -141,31 +183,51 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
+          if (_showWelcomeMessage)
+            Padding(
               padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
-                    offset: Offset(0, 2),
+              child: CustomPaint(
+                painter: MessageBubblePainter(),
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ],
-              ),
-              child: Text(
-                _messages[_currentMessageIndex],
-                style: TextStyle(fontSize: 24),
-                textAlign: TextAlign.center,
+                  child: Text(
+                    _welcomeMessage,
+                    style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ),
-          ),
+          if (!_showWelcomeMessage && _messages.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CustomPaint(
+                painter: MessageBubblePainter(),
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    _messages.last,
+                    style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
           Image.asset(
-            'lib/assets/glucare_panda_saludando.png', // Cambia esto a la ruta de tu imagen
-            height: 200, // Ajusta el tamaño según sea necesario
+            _showWelcomeMessage
+                ? 'lib/assets/glucare_panda_saludando.png'
+                : _hasGlucoseMeasurementsToday
+                    ? 'lib/assets/glucare_panda_feliz.png'
+                    : 'lib/assets/glucare_panda_triste.png',
+            height: 200,
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -178,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 10,
-                    offset: Offset(0, 2),
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
@@ -201,8 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         axisSide: meta.axisSide,
                                         child: Text(
                                           '${date.day}/${date.month}',
-                                          style: TextStyle(
-                                            fontSize: 12, // Agrandar las fechas
+                                          style: const TextStyle(
+                                            fontSize: 12,
                                           ),
                                         ),
                                       );
@@ -216,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     getTitlesWidget: (value, meta) {
                                       return Text(
                                         value.toInt().toString(),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 10,
                                         ),
                                       );
@@ -250,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         )
-                      : Text('Cargando historial de glucosa...'),
+                      : const Text('Cargando historial de glucosa...'),
                   const SizedBox(height: 20),
                   _buildAverageSection('Promedio Diario', _dailyAverages),
                   _buildWeeklyAverageSection('Promedio Semanal', _weeklyAverages),
@@ -271,11 +333,11 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 title,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               ...averages.entries.map((entry) => Text(
                     '${entry.key}: ${entry.value.toStringAsFixed(2)}',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   )),
               const SizedBox(height: 20),
             ],
@@ -290,11 +352,11 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 title,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               ...averages.entries.map((entry) => Text(
                     '${entry.key}: ${entry.value.averageValue.toStringAsFixed(2)}',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   )),
               const SizedBox(height: 20),
             ],
@@ -309,15 +371,53 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 title,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               ...averages.entries.map((entry) => Text(
                     '${entry.key}: ${entry.value.averageValue.toStringAsFixed(2)}',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   )),
               const SizedBox(height: 20),
             ],
           )
         : Text('Cargando $title...');
+  }
+}
+
+class MessageBubblePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+
+    final path = Path()
+      ..moveTo(20, 0)
+      ..lineTo(size.width - 20, 0)
+      ..quadraticBezierTo(size.width, 0, size.width, 20)
+      ..lineTo(size.width, size.height - 20)
+      ..quadraticBezierTo(size.width, size.height, size.width - 20, size.height)
+      ..lineTo(size.width / 2 + 20, size.height)
+      ..lineTo(size.width / 2, size.height + 20)
+      ..lineTo(size.width / 2 - 20, size.height)
+      ..lineTo(20, size.height)
+      ..quadraticBezierTo(0, size.height, 0, size.height - 20)
+      ..lineTo(0, 20)
+      ..quadraticBezierTo(0, 0, 20, 0);
+
+    canvas.drawPath(path, paint);
+
+    // Fill the background with white color
+    final backgroundPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    canvas.drawPath(path, backgroundPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }

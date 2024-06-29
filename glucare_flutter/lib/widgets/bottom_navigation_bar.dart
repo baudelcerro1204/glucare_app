@@ -51,11 +51,11 @@ class _CustomBottomNavigationBarState
         margin: EdgeInsets.only(
             bottom: 10.0, left: 10.0, right: 10.0), // Margen para flotación
         decoration: BoxDecoration(
-          color: Color(0xFF2A629A), // Color de fondo especificado
+          color: Color(0xFF0E245D), // Color de fondo especificado
           borderRadius: BorderRadius.circular(30.0), // Borde redondeado
           boxShadow: [
             BoxShadow(
-              color: Colors.black26,
+              color: Colors.white,
               blurRadius: 10,
               offset: Offset(0, 2), // Sombra para flotación
             ),

@@ -19,7 +19,7 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
   List _exercises = [];
   String _searchQuery = '';
   bool _isLoading = false;
-  final ApiService apiService = ApiService('http://192.168.0.5:8080'); // Instancia de ApiService
+  final ApiService apiService = ApiService('http://192.168.0.15:8080'); // Instancia de ApiService
   final translator = GoogleTranslator(); // Instancia del traductor
 
   @override
@@ -117,7 +117,7 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
       appBar: AppBar(
         title: const Text('Actividad Física'),
         backgroundColor: const Color(0xFFC0DEF4),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true, // Esto añade el botón de retroceso
       ),
       body: Container(
         color: const Color(0xFFC0DEF4),
@@ -179,9 +179,12 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
               const SizedBox(height: 10),
               TextField(
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[300],
                   hintText: 'Ingresar nombre del ejercicio',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
                   ),
                 ),
                 onChanged: (value) {

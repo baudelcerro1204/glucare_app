@@ -12,7 +12,7 @@ class NutritionScreen extends StatefulWidget {
 }
 
 class _NutritionScreenState extends State<NutritionScreen> {
-  final ApiService apiService = ApiService('http://192.168.0.5:8080');
+  final ApiService apiService = ApiService('http://192.168.0.15:8080');
   final ApiService foodService = ApiService('https://api.edamam.com');
   final TextEditingController _searchController = TextEditingController();
   String _searchTerm = '';
@@ -142,10 +142,10 @@ class _NutritionScreenState extends State<NutritionScreen> {
     try {
       final food = Food(
         nombre: foodData['label'],
-        calorias: foodData['nutrients']['ENERC_KCAL'].toString(),
-        proteinas: foodData['nutrients']['PROCNT'].toString(),
-        grasas: foodData['nutrients']['FAT'].toString(),
-        carbohidratos: foodData['nutrients']['CHOCDF'].toString(),
+        calorias: foodData['nutrients']['ENERC_KCAL']?.toStringAsFixed(2) ?? 'N/A',
+        proteinas: foodData['nutrients']['PROCNT']?.toStringAsFixed(2) ?? 'N/A',
+        grasas: foodData['nutrients']['FAT']?.toStringAsFixed(2) ?? 'N/A',
+        carbohidratos: foodData['nutrients']['CHOCDF']?.toStringAsFixed(2) ?? 'N/A',
         date: widget.date,
         time: TimeOfDay.now(),
       );
@@ -282,7 +282,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
         appBar: AppBar(
           title: Text('Nutrición'),
           backgroundColor: Color(0xFFC0DEF4),
-          automaticallyImplyLeading: false, // Desactiva la flecha de retroceso
+          automaticallyImplyLeading: true, // Habilita la flecha de retroceso
         ),
         body: Container(
           color: Color(0xFFC0DEF4),
@@ -469,7 +469,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
                                                 : null,
                                             title: Text(food['label']),
                                             subtitle: Text(
-                                              'Calorías: ${food['nutrients']['ENERC_KCAL']?.toString() ?? 'N/A'} kcal',
+                                              'Calorías: ${food['nutrients']['ENERC_KCAL']?.toStringAsFixed(2) ?? 'N/A'} kcal',
                                             ),
                                             onTap: () {
                                               showDialog(
@@ -479,10 +479,10 @@ class _NutritionScreenState extends State<NutritionScreen> {
                                                   title: Text(food['label']),
                                                   content: Text(
                                                     'Información Nutricional:\n\n'
-                                                    'Calorías: ${food['nutrients']['ENERC_KCAL']?.toString() ?? 'N/A'} kcal\n'
-                                                    'Proteínas: ${food['nutrients']['PROCNT']?.toString() ?? 'N/A'} g\n'
-                                                    'Grasas: ${food['nutrients']['FAT']?.toString() ?? 'N/A'} g\n'
-                                                    'Carbohidratos: ${food['nutrients']['CHOCDF']?.toString() ?? 'N/A'} g',
+                                                    'Calorías: ${food['nutrients']['ENERC_KCAL']?.toStringAsFixed(2) ?? 'N/A'} kcal\n'
+                                                    'Proteínas: ${food['nutrients']['PROCNT']?.toStringAsFixed(2) ?? 'N/A'} g\n'
+                                                    'Grasas: ${food['nutrients']['FAT']?.toStringAsFixed(2) ?? 'N/A'} g\n'
+                                                    'Carbohidratos: ${food['nutrients']['CHOCDF']?.toStringAsFixed(2) ?? 'N/A'} g',
                                                   ),
                                                   actions: [
                                                     TextButton(
