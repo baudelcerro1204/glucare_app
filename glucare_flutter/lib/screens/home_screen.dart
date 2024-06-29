@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  final apiService = ApiService('http://192.168.0.15:8080');
+  final apiService = ApiService('http://192.168.0.136:8080');
 
   Future<void> _fetchDailyAverages() async {
     try {

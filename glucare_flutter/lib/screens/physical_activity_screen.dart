@@ -19,7 +19,7 @@ class ActividadFisicaScreenState extends State<ActividadFisicaScreen> {
   List _exercises = [];
   String _searchQuery = '';
   bool _isLoading = false;
-  final ApiService apiService = ApiService('http://192.168.0.15:8080'); // Instancia de ApiService
+  final ApiService apiService = ApiService('http://192.168.0.136:8080'); // Instancia de ApiService
   final translator = GoogleTranslator(); // Instancia del traductor
 
   @override

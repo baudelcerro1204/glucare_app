@@ -19,7 +19,7 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
   late TextEditingController _otherTagController;
 
 
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
 
   final List<Map<String, dynamic>> _tags = [

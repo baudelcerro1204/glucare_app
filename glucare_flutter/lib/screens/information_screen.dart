@@ -178,12 +178,14 @@ Ante la sospecha de hiperglucemia, lo primero que se debe hacer es medir los niv
               ),
               const SizedBox(height: 20),
               Container(
+                width: 375, 
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: DropdownButton<String>(
+                  isExpanded: true,
                   hint: const Text('Seleccionar una sección:'),
                   items: <String>[
                     'Información sobre Diabetes tipo 1',

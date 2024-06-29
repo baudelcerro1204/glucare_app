@@ -24,7 +24,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   List<GlucoseMeasurement> _glucoseMeasurements = [];
   List<PhysicalActivity> _physicalActivities = [];
   List<Food> _foods = []; // Lista para almacenar comidas
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   @override
   void initState() {
@@ -160,6 +160,23 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     },
                   ),
                   SizedBox(height: 20),
+                  _buildDetailCard(
+                    'Registrar nivel de glucosa',
+                    Icons.bloodtype, // Simulando un ícono de gota de sangre
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GlucoseInputScreen(date: widget.date),
+                        ),
+                      ).then((result) {
+                        if (result != null) {
+                          _fetchGlucoseMeasurements(); // Actualizar mediciones de glucosa
+                        }
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
                   if (_reminders.isNotEmpty) ...[
                     Text(
                       'Recordatorios:',
@@ -216,24 +233,6 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
                     ),
                     SizedBox(height: 20),
                   ],
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => GlucoseInputScreen(date: widget.date),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'Registrar nivel de glucosa',
-                        style: TextStyle(
-                          color: Color(0xFF0D99FF),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

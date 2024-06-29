@@ -15,8 +15,7 @@ class _GlucoseInputScreenState extends State<GlucoseInputScreen> {
   String _glucoseLevel = '';
   TimeOfDay _selectedTime = TimeOfDay.now();
 
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
-
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +31,54 @@ class _GlucoseInputScreenState extends State<GlucoseInputScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-              decoration: BoxDecoration(
-                color: Color(0xFF2A629A), // Fondo azul marino
-                borderRadius: BorderRadius.circular(20), // Bordes redondeados
-              ),
-              child: Text(
-                'Fecha: ${widget.date.toLocal().toShortString()}',
-                style: TextStyle(fontSize: 16, color: Color(0xFF00D9FF)), // Color celeste flúor
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF2A629A), // Fondo azul marino
+                      borderRadius: BorderRadius.circular(20), // Bordes redondeados
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.calendar_today, color: Color(0xFF00D9FF)), // Ícono del calendario
+                        SizedBox(width: 10),
+                        Flexible(
+                          child: Text(
+                            'Fecha: ${widget.date.toLocal().toShortString()}',
+                            style: TextStyle(fontSize: 16, color: Color(0xFF00D9FF)), // Color celeste flúor
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF2A629A), // Fondo azul marino
+                      borderRadius: BorderRadius.circular(20), // Bordes redondeados
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.access_time, color: Color(0xFF00D9FF)), // Ícono del reloj
+                        SizedBox(width: 10),
+                        Flexible(
+                          child: Text(
+                            'Hora: ${_selectedTime.format(context)}',
+                            style: TextStyle(fontSize: 16, color: Color(0xFF00D9FF)), // Color celeste flúor
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             TextFormField(
@@ -59,27 +96,6 @@ class _GlucoseInputScreenState extends State<GlucoseInputScreen> {
                   _glucoseLevel = value;
                 });
               },
-            ),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-              decoration: BoxDecoration(
-                color: Color(0xFF2A629A), // Fondo azul marino
-                borderRadius: BorderRadius.circular(20), // Bordes redondeados
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Hora: ${_selectedTime.format(context)}',
-                    style: TextStyle(fontSize: 16, color: Color(0xFF00D9FF)), // Color celeste flúor
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.access_time, color: Color(0xFF00D9FF)), // Icono color celeste flúor
-                    onPressed: _selectTime,
-                  ),
-                ],
-              ),
             ),
             SizedBox(height: 20),
             Center(

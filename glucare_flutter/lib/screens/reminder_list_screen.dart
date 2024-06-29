@@ -14,7 +14,7 @@ class ReminderListScreen extends StatefulWidget {
 class _ReminderListScreenState extends State<ReminderListScreen> {
   List<Reminder> _reminders = [];
 
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   @override
   void initState() {
@@ -61,24 +61,15 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Elimina la flecha de regreso
+        title: const Text('Recordatorios'), // Establece Recordatorios como título
+        backgroundColor: const Color(0xFFC0DEF4),
+      ),
       body: Container(
         color: Color(0xFFC0DEF4), // Color de fondo
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Recordatorios',                 
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black54,
-                  ),
-                ),
-              ),
-            ),
             Expanded(
               child: ListView.builder(
                 itemCount: _reminders.length,
@@ -86,14 +77,14 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
                   final reminder = _reminders[index];
                   var etiqueta = reminder.etiqueta;
                   return Container(
-                    margin:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                    padding: EdgeInsets.all(12.0),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius:
                           BorderRadius.circular(16.0), // Bordes más redondeados
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,
                           blurRadius: 4.0,
@@ -102,6 +93,7 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
                     ),
                     child: ListTile(
                       leading: CircleAvatar(
+                        radius: 10, // Tamaño ajustado del punto de color
                         backgroundColor: _getTagColor(etiqueta!),
                       ),
                       title: Text(reminder.title),
@@ -132,7 +124,7 @@ class _ReminderListScreenState extends State<ReminderListScreen> {
           }
         },
         child: const Icon(Icons.add),
-        backgroundColor: Color(0xFF2A629A),
+        backgroundColor: const Color(0xFF2A629A),
       ),
     );
   }
