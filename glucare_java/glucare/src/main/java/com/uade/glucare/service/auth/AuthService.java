@@ -56,25 +56,16 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse changePassword(ChangePasswordRequest request) {
+    public void changePassword(ChangePasswordRequest request) {
         User user = userRepository.findByCorreoElectronico(request.getCorreoElectronico());
 
         if (user == null) {
             throw new UsernameNotFoundException("Usuario no encontrado");
         }
 
-        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Contraseña antigua incorrecta");
-        }
-
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
-        String token = jwtService.getToken(user);
-        return AuthResponse.builder()
-                .token(token)
-                .userId(user.getId())
-                .build();
 
     }
 

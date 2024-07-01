@@ -71,6 +71,23 @@ class ApiService {
     }
   }
 
+   Future<void> changePassword(String email, String newPassword) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/change-password'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'correoElectronico': email,
+        'newPassword': newPassword,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al cambiar la contraseña: ${response.body}');
+    }
+  }
+
   Future<UserDTO> getUserProfile() async {
   final token = await _getToken();
   final userId = await _getUserId(); 

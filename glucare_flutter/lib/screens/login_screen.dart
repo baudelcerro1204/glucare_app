@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glucare/main.dart';
+import 'package:glucare/screens/change_password_screen.dart';
 import 'package:glucare/screens/register_screen.dart';
 import 'package:glucare/services/api_service.dart';
 
@@ -80,8 +81,9 @@ class _IniciarSesionState extends State<IniciarSesion>
 
   // Método para manejar el olvido de contraseña
   void _forgotPassword(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Funcionalidad de recuperar contraseña')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChangePasswordScreen()),
     );
   }
 
