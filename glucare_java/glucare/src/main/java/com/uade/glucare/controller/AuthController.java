@@ -3,6 +3,7 @@ package com.uade.glucare.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.glucare.model.auth.AuthResponse;
+import com.uade.glucare.model.auth.ChangePasswordRequest;
 import com.uade.glucare.model.auth.LoginRequest;
 import com.uade.glucare.model.auth.RegisterRequest;
 import com.uade.glucare.service.auth.AuthService;
@@ -41,5 +42,10 @@ public class AuthController {
         String actualToken = token.replace("Bearer ", "");
         authService.logout(actualToken);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<AuthResponse> changePassword(@RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(authService.changePassword(request));
     }
 }
