@@ -18,9 +18,9 @@ class _IniciarSesionState extends State<IniciarSesion>
     with SingleTickerProviderStateMixin {
   late TextEditingController _correoElectronicoController;
   final TextEditingController _passwordController = TextEditingController();
+  bool _passwordVisible = false;
 
   final ApiService apiService = ApiService('http://192.168.0.136:8080');
-
 
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -140,13 +140,23 @@ class _IniciarSesionState extends State<IniciarSesion>
                 const SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  obscureText: !_passwordVisible,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.white,
                     labelText: 'Contraseña',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
                 ),
                 const SizedBox(height: 30),
                 SizedBox(

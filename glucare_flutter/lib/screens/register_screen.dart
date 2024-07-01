@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glucare/screens/login_screen.dart';
 import 'package:glucare/services/api_service.dart';
-import 'package:glucare/widgets/custom_appbar.dart';
 
 class CrearCuenta extends StatefulWidget {
   const CrearCuenta({super.key});
@@ -17,7 +16,8 @@ class _CrearCuentaState extends State<CrearCuenta> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _edadController = TextEditingController();
   String _selectedDiabetesType = '1';
-
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   final ApiService apiService = ApiService('http://192.168.0.136:8080');
   bool _isButtonDisabled = true;
@@ -114,23 +114,43 @@ class _CrearCuentaState extends State<CrearCuenta> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
+                  obscureText: !_passwordVisible,
+                  decoration: InputDecoration(
                     labelText: 'Contraseña',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.white,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
+                  obscureText: !_confirmPasswordVisible,
+                  decoration: InputDecoration(
                     labelText: 'Re ingrese contraseña',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.white,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _confirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _confirmPasswordVisible = !_confirmPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16.0),

@@ -15,6 +15,8 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final ApiService apiService = ApiService('http://192.168.0.136:8080');
+  bool _newPasswordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   void _setNewPassword() async {
     final String newPassword = _newPasswordController.text;
@@ -82,24 +84,44 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
                 const SizedBox(height: 30),
                 TextField(
                   controller: _newPasswordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  obscureText: !_newPasswordVisible,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.white,
                     labelText: 'Nueva Contraseña',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _newPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _newPasswordVisible = !_newPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: _confirmPasswordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  obscureText: !_confirmPasswordVisible,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.white,
                     labelText: 'Confirmar Nueva Contraseña',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _confirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _confirmPasswordVisible = !_confirmPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
                 ),
                 const SizedBox(height: 30),
                 SizedBox(
