@@ -16,11 +16,8 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
   List<bool> _repeatDays = List.filled(7, false);
   String _selectedTag = 'Mediciones de Azucar';
   Color _selectedColor = Colors.blue;
-  late TextEditingController _otherTagController;
 
-
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
-
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   final List<Map<String, dynamic>> _tags = [
     {'label': 'Mediciones de Azucar', 'color': Colors.blue},
@@ -38,7 +35,6 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
     _descriptionController = TextEditingController();
     _selectedDate = DateTime.now();
     _selectedTime = TimeOfDay.now();
-    _otherTagController = TextEditingController();
   }
 
   void _saveReminder() async {
@@ -48,8 +44,7 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
       date: _selectedDate ?? DateTime.now(),
       time: _selectedTime ?? TimeOfDay.now(),
       repeatDays: _repeatDays,
-      etiqueta:
-          _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
+      etiqueta: _selectedTag,
     );
 
     try {
@@ -206,20 +201,6 @@ class _NewReminderScreenState extends State<NewReminderScreen> {
                       ),
                     ),
                   ),
-                  if (_selectedTag == 'Otro') ...[
-                    SizedBox(height: 16.0),
-                    TextField(
-                      controller: _otherTagController,
-                      decoration: InputDecoration(
-                        labelText: 'Nombre de la etiqueta',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                  ],
                   SizedBox(height: 32.0),
                   Center(
                     child: ElevatedButton(

@@ -24,7 +24,7 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
   List<GlucoseMeasurement> _glucoseMeasurements = [];
   List<PhysicalActivity> _physicalActivities = [];
   List<Food> _foods = []; // Lista para almacenar comidas
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   @override
   void initState() {
@@ -292,22 +292,26 @@ class _DayDetailsScreenState extends State<DayDetailsScreen> {
     );
   }
 
-  Widget _buildReminderCard(Reminder reminder) {
+ Widget _buildReminderCard(Reminder reminder) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado horizontal
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    elevation: 2,
+    margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0), // Ajustar márgenes
+    child: Padding(
+      padding: const EdgeInsets.all(8.0), // Ajustar padding
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
             Text(
-              '${reminder.date.toLocal()}, ${reminder.time.format(context)}',
+              'Nombre: ${reminder.title}',
               style: TextStyle(fontSize: 14),
             ),
             Text(
-              reminder.description,
+              'Fecha: ${reminder.date.toLocal()}',
+              style: TextStyle(fontSize: 14),
+            ),
+            Text(
+              'Hora: ${reminder.time.format(context)}',
               style: TextStyle(fontSize: 14),
             ),
           ],

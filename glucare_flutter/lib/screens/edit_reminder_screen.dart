@@ -22,11 +22,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   String _selectedTag = '';
   Color _selectedColor = Colors.blue;
 
-  late TextEditingController _otherTagController;
-
-
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
-
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   final List<Map<String, dynamic>> _tags = [
     {'label': 'Mediciones de Azucar', 'color': Colors.blue},
@@ -50,7 +46,6 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
     _selectedTag = widget.reminder.etiqueta!;
     _selectedColor =
         _tags.firstWhere((tag) => tag['label'] == _selectedTag)['color'];
-    _otherTagController = TextEditingController();
   }
 
   void _updateReminder() async {
@@ -61,8 +56,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
       date: _selectedDate ?? DateTime.now(),
       time: _selectedTime ?? TimeOfDay.now(),
       repeatDays: _repeatDays,
-      etiqueta:
-          _selectedTag == 'Otro' ? _otherTagController.text : _selectedTag,
+      etiqueta: _selectedTag,
     );
 
     try {
@@ -268,20 +262,6 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                       ),
                     ),
                   ),
-                  if (_selectedTag == 'Otro') ...[
-                    SizedBox(height: 16.0),
-                    TextField(
-                      controller: _otherTagController,
-                      decoration: InputDecoration(
-                        labelText: 'Nombre de la etiqueta',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                  ],
                   SizedBox(height: 32.0),
                   Center(
                     child: ElevatedButton(

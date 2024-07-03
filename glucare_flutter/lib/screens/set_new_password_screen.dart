@@ -14,7 +14,7 @@ class SetNewPasswordScreen extends StatefulWidget {
 class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
   bool _newPasswordVisible = false;
   bool _confirmPasswordVisible = false;
 

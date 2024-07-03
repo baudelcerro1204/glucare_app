@@ -15,7 +15,7 @@ class _GlucoseInputScreenState extends State<GlucoseInputScreen> {
   String _glucoseLevel = '';
   TimeOfDay _selectedTime = TimeOfDay.now();
 
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   @override
   Widget build(BuildContext context) {

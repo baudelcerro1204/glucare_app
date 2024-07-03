@@ -20,7 +20,7 @@ class _IniciarSesionState extends State<IniciarSesion>
   final TextEditingController _passwordController = TextEditingController();
   bool _passwordVisible = false;
 
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   late AnimationController _animationController;
   late Animation<double> _animation;

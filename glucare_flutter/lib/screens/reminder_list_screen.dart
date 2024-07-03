@@ -14,7 +14,7 @@ class ReminderListScreen extends StatefulWidget {
 class _ReminderListScreenState extends State<ReminderListScreen> {
   List<Reminder> _reminders = [];
 
-  final ApiService apiService = ApiService('http://192.168.0.15:8080');
+  final ApiService apiService = ApiService('http://192.168.0.136:8080');
 
   @override
   void initState() {
