@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  final apiService = ApiService('http://192.168.0.136:8080');
+  final apiService = ApiService('http://192.168.0.15:8080');
 
   Future<void> _fetchDailyAverages() async {
     try {
@@ -164,8 +164,30 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  List<MapEntry<DateTime, double>> _getLast7DaysData(Map<DateTime, double> data) {
+    DateTime today = DateTime.now();
+    DateTime weekAgo = today.subtract(Duration(days: 7)); 
+    return data.entries.where((entry) => entry.key.isAfter(weekAgo) || entry.key.isAtSameMomentAs(weekAgo)).toList();
+  }
+
+  List<MapEntry<String, WeeklyAverage>> _getLast4WeeksData(Map<String, WeeklyAverage> data) {
+    List<MapEntry<String, WeeklyAverage>> sortedEntries = data.entries.toList();
+    sortedEntries.sort((a, b) => b.key.compareTo(a.key)); // Ordenar de más reciente a más antiguo
+    return sortedEntries.take(4).toList();
+  }
+
+  List<MapEntry<String, MonthlyAverage>> _getLast4MonthsData(Map<String, MonthlyAverage> data) {
+    List<MapEntry<String, MonthlyAverage>> sortedEntries = data.entries.toList();
+    sortedEntries.sort((a, b) => b.key.compareTo(a.key)); // Ordenar de más reciente a más antiguo
+    return sortedEntries.take(4).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<MapEntry<DateTime, double>> last7DaysData = _getLast7DaysData(_dailyAverageMap);
+    List<MapEntry<String, WeeklyAverage>> last4WeeksData = _getLast4WeeksData(_weeklyAverages);
+    List<MapEntry<String, MonthlyAverage>> last4MonthsData = _getLast4MonthsData(_monthlyAverages);
+
     return Scaffold(
       backgroundColor: const Color(0xFFC0DEF4),
       appBar: AppBar(
@@ -246,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Column(
                 children: [
-                  _dailyAverageMap.isNotEmpty
+                  last7DaysData.isNotEmpty
                       ? SizedBox(
                           height: 300,
                           child: BarChart(
@@ -297,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 show: true,
                                 border: Border.all(color: Colors.black26),
                               ),
-                              barGroups: _dailyAverageMap.entries
+                              barGroups: last7DaysData
                                   .map((entry) => BarChartGroupData(
                                         x: entry.key.millisecondsSinceEpoch.toInt(),
                                         barRods: [
@@ -314,9 +336,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       : const Text('Cargando historial de glucosa...'),
                   const SizedBox(height: 20),
-                  _buildAverageSection('Promedio Diario', _dailyAverages),
-                  _buildWeeklyAverageSection('Promedio Semanal', _weeklyAverages),
-                  _buildMonthlyAverageSection('Promedio Mensual', _monthlyAverages),
+                  _buildAverageSection('Promedio Diario', last7DaysData),
+                  _buildWeeklyAverageSection('Promedio Semanal', last4WeeksData),
+                  _buildMonthlyAverageSection('Promedio Mensual', last4MonthsData),
                 ],
               ),
             ),
@@ -326,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildAverageSection(String title, Map<String, double> averages) {
+  Widget _buildAverageSection(String title, List<MapEntry<DateTime, double>> averages) {
     return averages.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,8 +357,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 title,
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              ...averages.entries.map((entry) => Text(
-                    '${entry.key}: ${entry.value.toStringAsFixed(2)}',
+              ...averages.map((entry) => Text(
+                    '${entry.key.year}-${entry.key.month}-${entry.key.day}: ${entry.value.toStringAsFixed(2)}',
                     style: const TextStyle(fontSize: 16),
                   )),
               const SizedBox(height: 20),
@@ -345,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
         : Text('Cargando $title...');
   }
 
-  Widget _buildWeeklyAverageSection(String title, Map<String, WeeklyAverage> averages) {
+  Widget _buildWeeklyAverageSection(String title, List<MapEntry<String, WeeklyAverage>> averages) {
     return averages.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title,
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              ...averages.entries.map((entry) => Text(
+              ...averages.map((entry) => Text(
                     '${entry.key}: ${entry.value.averageValue.toStringAsFixed(2)}',
                     style: const TextStyle(fontSize: 16),
                   )),
@@ -364,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
         : Text('Cargando $title...');
   }
 
-  Widget _buildMonthlyAverageSection(String title, Map<String, MonthlyAverage> averages) {
+  Widget _buildMonthlyAverageSection(String title, List<MapEntry<String, MonthlyAverage>> averages) {
     return averages.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title,
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              ...averages.entries.map((entry) => Text(
+              ...averages.map((entry) => Text(
                     '${entry.key}: ${entry.value.averageValue.toStringAsFixed(2)}',
                     style: const TextStyle(fontSize: 16),
                   )),
